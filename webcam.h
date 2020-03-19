@@ -14,7 +14,8 @@ class webcam
 {
 public:
     webcam(class Window*);
-    cv::Mat capture();
+    cv::Mat captureMotion();
+    cv::Mat captureOrientation();
     int mult_capture();
 private:
     class Window* window;
@@ -23,6 +24,7 @@ private:
     cv::Mat oldFrame;
     cv::Mat oldFrame_gray;
     cv::Mat modelFace;
+    cv::Rect templateRect;
 
     int frameWidth;
     int frameHeight;
