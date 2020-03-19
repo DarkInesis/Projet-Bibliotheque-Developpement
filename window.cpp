@@ -21,7 +21,7 @@ Window::Window(QWidget *parent) :
 void Window::update()
 {
     cv::Mat frame;
-    frame=myWebCam->capture();
+    frame=myWebCam->captureOrientation();
     updateVisage(frame);
 }
 void Window::updateVisage(cv::Mat img){
