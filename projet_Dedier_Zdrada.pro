@@ -4,17 +4,31 @@
 #
 #-------------------------------------------------
 
-QT       -= gui
+QT       += core gui opengl widgets
 
-TARGET = TestOpenCV
+TARGET = Projet_bibliotheque
 CONFIG   += console
 CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+# ajout des libs au linker
+win32 {
+    win32-msvc* {
+        LIBS     += opengl32.lib glu32.lib
+    } else {
+        LIBS     += -lopengl32 -lglu32
+    }
+}
+else {
+        LIBS     += -lGL -lGLU
+}
 
 SOURCES += \
     main.cpp \
+    maze.cpp \
+    myglwidget.cpp \
+    wall.cpp \
     webcam.cpp \
     window.cpp
 
@@ -35,6 +49,11 @@ FORMS += \
     window.ui
 
 HEADERS += \
+    cell.h \
+    draw_functions.h \
+    maze.h \
+    myglwidget.h \
+    wall.h \
     webcam.h \
     window.h
 
