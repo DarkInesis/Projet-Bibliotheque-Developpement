@@ -19,7 +19,7 @@ webcam::webcam(class Window* window)
     {
         cerr<<"Error openning the default camera"<<endl;
     }
-    if( !face_cascade.load( "../TestDetectMultiScale/haarcascade_frontalface_alt.xml" ) )
+    if( !face_cascade.load( "../Projet-Bibliotheque-Developpement/resources/haarcascade_frontalface_alt.xml" ) )
     {
         cerr<<"Error loading haarcascade"<<endl;
     }
