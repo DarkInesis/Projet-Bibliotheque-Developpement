@@ -27,6 +27,10 @@ void Wall::Display() const {
   int i, j;
   // Dessin du sol et plafond du labyrinthe
   glBegin(GL_QUADS);
+
+  // Couleur matériaux sol
+  GLfloat color_floor[]={1,1,1,1};
+  glMaterialfv(GL_FRONT,GL_AMBIENT,color_floor);
   glColor3ub(150, 150, 150);
   // Sol
   glVertex3f(0, 0, 0);
@@ -34,6 +38,10 @@ void Wall::Display() const {
   glVertex3f(coeff_move * maze.width_, -coeff_move * maze.height_, 0);
   glVertex3f(0, -coeff_move * maze.height_, 0);
 
+  // Couleur matériaux plafond
+  GLfloat color_cap[]={0,0,0,1};
+  glMaterialfv(GL_FRONT,GL_AMBIENT,color_cap);
+  glColor3ub(150, 150, 150);
   // Plafond
   glVertex3f(0, 0, 0.6 * SZ);
   glVertex3f(coeff_move * maze.width_, 0, 0.6 * SZ);
@@ -41,6 +49,10 @@ void Wall::Display() const {
   glVertex3f(0, -coeff_move * maze.height_, 0.6 * SZ);
   glEnd();
 
+  // Couleur matériaux murs
+  GLfloat color_Wall[]={1,1,0,1};
+  glMaterialfv(GL_FRONT,GL_AMBIENT,color_Wall);
+  glColor3ub(150, 150, 150);
   // On se déplace au centre de la première case
   glTranslatef(SZ / 2, -SZ / 2, 0);
 

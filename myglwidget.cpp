@@ -48,6 +48,17 @@ void MyGLWidget::initializeGL() {
 
   // Activation du zbuffer
   glEnable(GL_DEPTH_TEST);
+
+  // Activation des lumieres
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  // Initialisation de la lumiere du soleil
+  // ---- Positionnement en mode spot----
+  GLfloat light_tab[]={0,0,0,1};
+  glLightfv(GL_LIGHT0, GL_POSITION,light_tab);
+  // ----- Changement de la couleur ----
+  GLfloat color_ambiant[]={1,1,1,1};
+  glLightfv(GL_LIGHT0,GL_AMBIENT,color_ambiant);
 }
 
 // Fonction de redimensionnement
