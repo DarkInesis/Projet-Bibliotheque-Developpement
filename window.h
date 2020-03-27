@@ -5,6 +5,7 @@
 #include <thread>
 #include <iostream>
 #include "webcam.h"
+#include "myglwidget.h"
 
 namespace Ui {
 class Window;
@@ -22,6 +23,7 @@ public:
 private:
     Ui::Window *ui;
     class webcam* myWebCam;
+    MyGLWidget* glWidget;
 private slots:
     void update();
 };

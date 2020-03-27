@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
 int main(int argc, char *argv[]) {
 
-  string choix = "Maze";
+  string choix = "";
 
   if (choix == "Maze") {
 

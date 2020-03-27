@@ -10,12 +10,12 @@ Window::Window(QWidget *parent) :
     ui(new Ui::Window)
 {
     ui->setupUi(this);
+
     myWebCam=new webcam(this);
     QTimer *timer= new QTimer();
     timer->start();
     connect(timer,SIGNAL(timeout()),this,SLOT(update()));
 
-    // std::thread camThread(myWebCam->capture(),*(new cv::Mat()));
 
 }
 void Window::update()

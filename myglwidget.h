@@ -7,10 +7,10 @@
 #include <QWheelEvent>
 #include <QKeyEvent>
 #include <QTimer>
-
+#include<QOpenGLWidget>
 
 // Classe dediee a l'affichage d'une scene OpenGL
-class MyGLWidget : public QGLWidget
+class MyGLWidget : public QOpenGLWidget
 {
     Q_OBJECT
 

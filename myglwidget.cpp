@@ -10,8 +10,8 @@
 #include <random>
 
 // Declarations des constantes
-const unsigned int WIN_WIDTH = 1000;
-const unsigned int WIN_HEIGHT = 900;
+const unsigned int WIN_WIDTH = 300;
+const unsigned int WIN_HEIGHT =400;
 const float MAX_DIMENSION = 50.0f;
 const float PI = 3.14159265359;
 
@@ -22,11 +22,11 @@ float z_position = 7;
 float angle_view_x = -90;
 
 // Moving directions
-bool moveForward = false, moveBackward = false, moveLeft = false,
+bool moveForward = false, moveBackward = false, moveLeft = true,
      moveRight = false;
 
 // Constructeur
-MyGLWidget::MyGLWidget(QWidget *parent) : QGLWidget(parent) {
+MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent) {
   // Reglage de la taille/position
   setFixedSize(WIN_WIDTH, WIN_HEIGHT);
   move(QApplication::desktop()->screen()->rect().center() - rect().center());
@@ -34,7 +34,8 @@ MyGLWidget::MyGLWidget(QWidget *parent) : QGLWidget(parent) {
   // Connexion du timer d'animation
   connect(&m_AnimationTimer, &QTimer::timeout, [&] {
     m_TimeElapsed += 1.0f / 5.0f;
-    updateGL();
+    //updateGL();
+    update();
   });
 
   m_AnimationTimer.setInterval(10);
@@ -138,7 +139,8 @@ void MyGLWidget::keyPressEvent(QKeyEvent *event) {
 
   // Acceptation de l'evenement et mise a jour de la scene
   event->accept();
-  updateGL();
+  //updateGL();
+  update();
 }
 
 void MyGLWidget::keyReleaseEvent(QKeyEvent *event) {

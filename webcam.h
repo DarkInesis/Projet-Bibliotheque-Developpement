@@ -17,6 +17,7 @@ public:
     cv::Mat captureMotion();
     cv::Mat captureOrientation();
     int mult_capture();
+    void initModel();
 private:
     class Window* window;
     cv::VideoCapture cap;
@@ -24,6 +25,7 @@ private:
     cv::Mat oldFrame;
     cv::Mat oldFrame_gray;
     cv::Mat modelFace;
+    cv::Mat firstModel;
     cv::Rect templateRect;
 
     int frameWidth;
