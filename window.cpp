@@ -21,8 +21,15 @@ Window::Window(QWidget *parent) :
 void Window::update()
 {
     cv::Mat frame;
-    frame=myWebCam->captureOrientation();
+    if(myWebCam->getNeedWebcamInitialization()){
+        ui->buttonInitWebCam->setEnabled(true);
+        frame=myWebCam->initModel();
+    }else{
+        ui->buttonInitWebCam->setEnabled(false);
+        frame=myWebCam->captureOrientation();
+    }
     updateVisage(frame);
+
 }
 void Window::updateVisage(cv::Mat img){
      cv::resize(img, img, Size(200, 200), 0, 0, INTER_LINEAR);
@@ -34,4 +41,9 @@ void Window::updateVisage(cv::Mat img){
 Window::~Window()
 {
     delete ui;
+}
+
+void Window::on_buttonInitWebCam_clicked()
+{
+    myWebCam->resetAbsurdsDetectionStates();
 }

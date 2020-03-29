@@ -11,6 +11,9 @@ webcam::webcam(class Window* window)
     frameHeight=480;
     templateWidth=40;
     templateHeight=40;
+    // Init state variable
+    needWebcamInitialization=true;
+    this->counterConsecutivesAbsurdsDetections=0;
     // Init webcam
     cap.open(0);
     cap.set(CAP_PROP_FRAME_WIDTH,frameWidth);
@@ -169,18 +172,64 @@ Mat webcam::captureOrientation(){
                  direction="null";
                  // Redefinition du model ( à revoir)
                  this->modelFace=Mat(frame_gray,MatchedZone);
-
              }
              std::cout<<direction<<endl;
 
              // Dessin du rectangle
              rectangle(frame,MatchedZone,Scalar(255,255,0),2);
          }
+         else{
+            this->counterConsecutivesAbsurdsDetections+=1;
+             if(this->counterConsecutivesAbsurdsDetections>=this->consecutiveAbsurdsDetectionsLimit)
+             {
+                this->needWebcamInitialization=true;
+             }
+         }
     }
     // Swap matrixes
     swap(oldFrame_gray,frame_gray);
     return frame;
 }
-void webcam::initModel(){
-    modelFace=Mat(oldFrame_gray,templateRect);
+cv::Mat webcam::initModel(){
+    Mat frame,frame_gray;
+    std::vector<Rect> faces;
+    // Get frame
+    cap >> frame;
+    // Mirror effect
+    cv::flip(frame,frame,1);
+    // Convert to gray
+    cv::cvtColor(frame,frame_gray,COLOR_BGR2GRAY);
+    // Equalize graylevels
+    equalizeHist( frame_gray, frame_gray );
+
+    // Create the matchTemplate image result
+    Mat resultImage;    // to store the matchTemplate result
+    int result_cols =  frame.cols-templateWidth  + 1;
+    int result_rows = frame.rows-templateHeight + 1;
+    resultImage.create( result_cols, result_rows, CV_32FC1 );
+    //-- Detect faces
+    face_cascade.detectMultiScale( frame_gray, faces, 1.1,4, 0,Size(60, 60) );
+
+
+    if (faces.size()==1)
+    {
+         Rect workingRect=faces[0];
+         templateRect=Rect(workingRect.x+(workingRect.width-templateWidth)/2,workingRect.y+(workingRect.height-templateHeight)/2,templateWidth,templateHeight);
+         cv::Point workingCenter(workingRect.x+workingRect.width/2,workingRect.y+workingRect.height/2);
+         rectangle(frame,workingRect,Scalar( 0, 255, 0),2);
+         rectangle(frame,templateRect,Scalar( 255, 0, 0),2);
+         this->modelFace=Mat(frame_gray,templateRect);
+     }
+
+    // Swap matrixes
+    swap(oldFrame_gray,frame_gray);
+    return frame;
+}
+bool webcam::getNeedWebcamInitialization(){
+    return this->needWebcamInitialization;
+}
+
+void webcam::resetAbsurdsDetectionStates(){
+    this->needWebcamInitialization=false;
+    this->counterConsecutivesAbsurdsDetections=0;
 }

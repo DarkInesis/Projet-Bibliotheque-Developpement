@@ -17,7 +17,9 @@ public:
     cv::Mat captureMotion();
     cv::Mat captureOrientation();
     int mult_capture();
-    void initModel();
+    cv::Mat initModel();
+    bool getNeedWebcamInitialization();
+    void resetAbsurdsDetectionStates();
 private:
     class Window* window;
     cv::VideoCapture cap;
@@ -32,6 +34,10 @@ private:
     int frameHeight;
     int templateWidth;
     int templateHeight;
+
+    bool needWebcamInitialization=true;
+    int counterConsecutivesAbsurdsDetections=0;
+    int consecutiveAbsurdsDetectionsLimit=10;
 };
 
 #endif // WEBCAM_H

@@ -26,6 +26,7 @@ private:
     MyGLWidget* glWidget;
 private slots:
     void update();
+    void on_buttonInitWebCam_clicked();
 };
 
 #endif // WINDOW_H
