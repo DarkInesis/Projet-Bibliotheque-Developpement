@@ -25,10 +25,11 @@ else {
 }
 
 SOURCES += \
+    ball.cpp \
+    gamewidget.cpp \
+    labyrinthe.cpp \
     main.cpp \
     maze.cpp \
-    myglwidget.cpp \
-    wall.cpp \
     webcam.cpp \
     window.cpp
 
@@ -49,12 +50,20 @@ FORMS += \
     window.ui
 
 HEADERS += \
+    ball.h \
     cell.h \
     draw_functions.h \
+    gamewidget.h \
+    labyrinthe.h \
     maze.h \
-    myglwidget.h \
-    wall.h \
     webcam.h \
     window.h
 
 QT += widgets
+
+DISTFILES += \
+    res/haarcascade_frontalface_alt.xml \
+    res/logo_tse.png \
+    res/mercure.jpg \
+    resources/haarcascade_frontalface_alt.xml \
+    resources/logo_tse.png

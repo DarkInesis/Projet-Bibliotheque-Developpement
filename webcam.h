@@ -10,24 +10,24 @@
 #include <iostream>
 #include "window.h"
 
-class webcam
-{
-public:
-    webcam(class Window*);
-    cv::Mat capture();
-    int mult_capture();
-private:
-    class Window* window;
-    cv::VideoCapture cap;
-    cv::CascadeClassifier face_cascade;
-    cv::Mat oldFrame;
-    cv::Mat oldFrame_gray;
-    cv::Mat modelFace;
+class webcam {
+     public:
+      webcam(class Window*);
+      cv::Mat capture();
+      int mult_capture();
 
-    int frameWidth;
-    int frameHeight;
-    int templateWidth;
-    int templateHeight;
+     private:
+      class Window* window;
+      cv::VideoCapture cap;
+      cv::CascadeClassifier face_cascade;
+      cv::Mat oldFrame;
+      cv::Mat oldFrame_gray;
+      cv::Mat modelFace;
+
+      int frameWidth;
+      int frameHeight;
+      int templateWidth;
+      int templateHeight;
 };
 
-#endif // WEBCAM_H
+#endif  // WEBCAM_H
