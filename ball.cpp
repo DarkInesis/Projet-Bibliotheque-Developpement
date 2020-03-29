@@ -15,7 +15,7 @@ Ball::Ball(int ball_i, int ball_j) {
 
       // Ajout texture
       QImage image = QGLWidget::convertToGLFormat(
-          QImage("../Projet-Bibliotheque-Developpement/res/logo_tse.png"));
+          QImage("../Projet-Bibliotheque-Developpement/resources/logo_tse.png"));
 
       glGenTextures(1, &this->texture);       // Crée un objet texture et lui associe un
                                               // numéro qu’on stocke
