@@ -71,6 +71,9 @@ void GameWidget::paintGL() {
       glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
       glLoadIdentity();
 
+      // update the states of booleans for the movement :
+      //{moveLeft,moveRight,moveForward,moveBackward}=this->usercontroler->updateMove();
+
       userMove();
 
       // Definition de la position de la camera

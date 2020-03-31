@@ -4,12 +4,51 @@ using namespace cv;
 
 UserControl::UserControl() { myWebCam = new Webcam(); }
 
-void UserControl::updateVisage(cv::Mat img) {
-
-      cv::resize(img, img, Size(340, 255), 0, 0, INTER_LINEAR);
-      cv::cvtColor(img, img, COLOR_BGR2RGB);  // Qt reads in RGB whereas CV in BGR
-      QImage imdisplay((uchar *)img.data, img.cols, img.rows, img.step,
+QPixmap UserControl::getWebcamFrameQPixMap() {
+    cv::Mat frame;
+    if (myWebCam->getNeedWebcamInitialization()) {
+          frame = myWebCam->initModel();
+    } else {
+          frame = myWebCam->captureOrientation();
+    }
+      cv::resize(frame, frame, Size(340, 255), 0, 0, INTER_LINEAR);
+      cv::cvtColor(frame, frame, COLOR_BGR2RGB);  // Qt reads in RGB whereas CV in BGR
+      QImage imdisplay((uchar *)frame.data, frame.cols, frame.rows, frame.step,
                        QImage::Format_RGB888);  // Converts the CV image into Qt standard format
-      ui->display_image->setPixmap(
-          QPixmap::fromImage(imdisplay));  // display the image in label that is created earlier
+      return QPixmap::fromImage(imdisplay);
 }
+bool* UserControl::updateMove(){
+    //mettre à jour valeur direction gamewidget
+    std::string direction="";
+    direction=myWebCam->getDirection();
+    std::cout<<direction<<endl;
+     bool moveRight=false;
+     bool moveLeft=false;
+     bool moveForward=false;
+     bool moveBackward=false;
+    if(direction=="droit" ) {
+          moveRight = true;
+    }
+    else if(direction=="gauche") {
+          moveLeft = true;
+    }
+    else if(direction=="haut") {
+          moveForward = true;
+    }
+    else if(direction=="bas") {
+          moveBackward = true;
+    }
+    return new bool[4] {moveRight,moveLeft,moveForward,moveBackward};
+}
+
+bool UserControl::getNeedWebcamInitialization()
+{
+    return myWebCam->getNeedWebcamInitialization();
+}
+
+void UserControl::resetAbsurdsDetectionStates()
+{
+    myWebCam->resetAbsurdsDetectionStates();
+}
+
+

@@ -1,7 +1,8 @@
 #include <QApplication>
 #include <ctime>
-#include "gamewidget.h"
 #include "window.h"
+#include "gamewidget.h"
+
 
 int main(int argc, char *argv[]) {
       string choix = "";

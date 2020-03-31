@@ -1,16 +1,12 @@
 #ifndef USERCONTROL_H
 #define USERCONTROL_H
 
-#include <webcam.h>
+#include "webcam.h"
 #include "window.h"
 #include "ui_window.h"
-#include <mutex>
 #include <QTimer>
 #include <QWidget>
-#include <thread>
 #include <iostream>
-#include "webcam.h"
-#include "gamewidget.h"
 
 class UserControl {
      private:
@@ -19,7 +15,10 @@ class UserControl {
 
      public:
       UserControl();
-      void updateVisage(cv::Mat img);
+      QPixmap getWebcamFrameQPixMap();
+      bool* updateMove();
+      bool getNeedWebcamInitialization();
+      void resetAbsurdsDetectionStates();
 };
 
 #endif  // USERCONTROL_H

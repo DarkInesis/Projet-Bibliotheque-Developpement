@@ -18,6 +18,7 @@ class Webcam {
       cv::Mat initModel();
       bool getNeedWebcamInitialization();
       void resetAbsurdsDetectionStates();
+      std::string getDirection();
 
      private:
       cv::VideoCapture cap;
@@ -32,7 +33,7 @@ class Webcam {
       int frameHeight;
       int templateWidth;
       int templateHeight;
-
+      std::string direction="null";
       bool needWebcamInitialization = true;
       int counterConsecutivesAbsurdsDetections = 0;
       int consecutiveAbsurdsDetectionsLimit = 10;

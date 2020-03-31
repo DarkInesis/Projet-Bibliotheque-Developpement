@@ -33,8 +33,6 @@ Webcam::Webcam() {
 }
 
 Mat Webcam::captureOrientation() {
-      std::string direction;
-
       Mat frame, frame_gray;
       std::vector<Rect> faces;
       // Get frame
@@ -158,4 +156,7 @@ bool Webcam::getNeedWebcamInitialization() { return this->needWebcamInitializati
 void Webcam::resetAbsurdsDetectionStates() {
       this->needWebcamInitialization = false;
       this->counterConsecutivesAbsurdsDetections = 0;
+}
+std::string Webcam::getDirection(){
+    return this->direction;
 }
