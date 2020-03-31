@@ -5,10 +5,11 @@
 
 using namespace std;
 using namespace cv;
+
 Window::Window(QWidget *parent) : QWidget(parent), ui(new Ui::Window) {
       ui->setupUi(this);
 
-      myWebCam = new webcam(this);
+      myWebCam = new Webcam();
       QTimer *timer = new QTimer();
       timer->start();
       connect(timer, SIGNAL(timeout()), this, SLOT(update()));
@@ -24,6 +25,7 @@ void Window::update() {
       }
       updateVisage(frame);
 }
+
 void Window::updateVisage(cv::Mat img) {
       cv::resize(img, img, Size(340, 255), 0, 0, INTER_LINEAR);
       cv::cvtColor(img, img, COLOR_BGR2RGB);  // Qt reads in RGB whereas CV in BGR

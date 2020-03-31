@@ -21,7 +21,7 @@ class Window : public QWidget {
 
      private:
       Ui::Window* ui;
-      class webcam* myWebCam;
+      Webcam* myWebCam;
       GameWidget* gameWidget;
      private slots:
       void update();
