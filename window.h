@@ -5,28 +5,27 @@
 #include <thread>
 #include <iostream>
 #include "webcam.h"
-#include "myglwidget.h"
+#include "gamewidget.h"
 
 namespace Ui {
 class Window;
 }
 
-class Window : public QWidget
-{
-    Q_OBJECT
+class Window : public QWidget {
+      Q_OBJECT
 
-public:
-    explicit Window(QWidget *parent = nullptr);
-    ~Window();
-    void updateVisage(cv::Mat img);
+     public:
+      explicit Window(QWidget* parent = nullptr);
+      ~Window();
+      void updateVisage(cv::Mat img);
 
-private:
-    Ui::Window *ui;
-    class webcam* myWebCam;
-    MyGLWidget* glWidget;
-private slots:
-    void update();
-    void on_buttonInitWebCam_clicked();
+     private:
+      Ui::Window* ui;
+      class webcam* myWebCam;
+      GameWidget* gameWidget;
+     private slots:
+      void update();
+      void on_buttonInitWebCam_clicked();
 };
 
-#endif // WINDOW_H
+#endif  // WINDOW_H

@@ -1,19 +1,3 @@
-
-/*
- *
-
-#include <QApplication>
-
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
-    Window w;
-    w.show();
-    return a.exec();
-}
-
-*/
-
 #include <QApplication>
 #include <ctime>
 #include "gamewidget.h"
@@ -28,7 +12,7 @@ int main(int argc, char *argv[]) {
             // Creation de l'application QT
             QApplication app(argc, argv);
             // Creation du widget opengl
-            GameWidget gameWidget;
+            GameWidget gameWidget(nullptr, 5, 10);
             gameWidget.show();
             // Execution de l'application QT
             return app.exec();

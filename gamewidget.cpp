@@ -10,25 +10,13 @@
 #include <random>
 
 // Declarations des constantes
-const unsigned int WIN_WIDTH = 1600;
-const unsigned int WIN_HEIGHT = 900;
+const unsigned int WIN_WIDTH = 1150;
+const unsigned int WIN_HEIGHT = 850;
 const float MAX_DIMENSION = 50.0f;
 const float PI = 3.14159265359;
 
-// Position de départ (centre de la première case)
-float x_position = SZ / 2;
-float y_position = -SZ / 2;
-float z_position = 7;
-float angle_view_x = -90;
-
-// Moving directions
-bool moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
-
-// Game variable
-bool ball_found = false;
-
 // Constructeur
-GameWidget::GameWidget(QWidget* parent) : QGLWidget(parent) {
+GameWidget::GameWidget(QWidget* parent, int width, int height) : QGLWidget(parent) {
       // Reglage de la taille/position
       setFixedSize(WIN_WIDTH, WIN_HEIGHT);
       move(QApplication::desktop()->screen()->rect().center() - rect().center());
@@ -38,6 +26,9 @@ GameWidget::GameWidget(QWidget* parent) : QGLWidget(parent) {
             m_TimeElapsed += 1.0f / 5.0f;
             updateGL();
       });
+
+      maze_width_ = width;
+      maze_height_ = height;
 
       m_AnimationTimer.setInterval(10);
       m_AnimationTimer.start();
@@ -53,7 +44,7 @@ void GameWidget::initializeGL() {
       glEnable(GL_LIGHTING);
       glEnable(GL_LIGHT0);
 
-      labyrinthe = new Labyrinthe(5, 5);
+      labyrinthe = new Labyrinthe(maze_width_, maze_height_);
 
       // Ball position
       ball = new Ball(2, 2);
