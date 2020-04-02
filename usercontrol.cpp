@@ -21,12 +21,12 @@ bool* UserControl::updateMove(){
     //mettre à jour valeur direction gamewidget
     std::string direction="";
     direction=myWebCam->getDirection();
-    std::cout<<direction<<endl;
+    std::cout<<direction<<std::endl;
      bool moveRight=false;
      bool moveLeft=false;
      bool moveForward=false;
      bool moveBackward=false;
-    if(direction=="droit" ) {
+    if(direction=="droite" ) {
           moveRight = true;
     }
     else if(direction=="gauche") {

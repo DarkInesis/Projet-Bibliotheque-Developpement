@@ -2,12 +2,10 @@
 #define WINDOW_H
 
 #include <QWidget>
-#include <thread>
 #include <iostream>
-#include "usercontrol.h"
 #include "webcam.h"
 #include "gamewidget.h"
-
+#include "usercontrol.h"
 
 namespace Ui {
 class Window;

@@ -1,12 +1,12 @@
 #include <QApplication>
 #include <ctime>
 #include "window.h"
-#include "gamewidget.h"
+// #include "gamewidget.h"
 
 
 int main(int argc, char *argv[]) {
       string choix = "";
-
+      /*
       if (choix == "Maze") {
             // Initialisation du generateur de nombres aleatoires
             srand(time(nullptr));
@@ -18,10 +18,10 @@ int main(int argc, char *argv[]) {
             // Execution de l'application QT
             return app.exec();
 
-      } else {
+      } else {*/
             QApplication a(argc, argv);
             Window w;
             w.show();
             return a.exec();
-      }
+      //}
 }

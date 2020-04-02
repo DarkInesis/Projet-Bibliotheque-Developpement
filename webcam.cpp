@@ -51,6 +51,8 @@ Mat Webcam::captureOrientation() {
       resultImage.create(result_cols, result_rows, CV_32FC1);
       //-- Detect faces
       face_cascade.detectMultiScale(frame_gray, faces, 1.1, 4, 0, Size(60, 60));
+      // init direction
+      direction="no_detection";
       if (faces.size() == 1) {
             Rect workingRect = faces[0];
             templateRect = Rect(workingRect.x + (workingRect.width - templateWidth) / 2,

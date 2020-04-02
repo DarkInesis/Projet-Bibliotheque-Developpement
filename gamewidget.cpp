@@ -17,6 +17,8 @@ const float PI = 3.14159265359;
 
 // Constructeur
 GameWidget::GameWidget(QWidget* parent, int width, int height) : QGLWidget(parent) {
+    // Init controler
+    this->userControler=userControler;
       // Reglage de la taille/position
       setFixedSize(WIN_WIDTH, WIN_HEIGHT);
       move(QApplication::desktop()->screen()->rect().center() - rect().center());
@@ -72,8 +74,9 @@ void GameWidget::paintGL() {
       glLoadIdentity();
 
       // update the states of booleans for the movement :
-      //{moveLeft,moveRight,moveForward,moveBackward}=this->usercontroler->updateMove();
+      bool* stateMove=this->userControler->updateMove();
 
+      moveLeft=stateMove[0];moveRight=stateMove[1];moveForward=stateMove[2];moveBackward=stateMove[3];
       userMove();
 
       // Definition de la position de la camera

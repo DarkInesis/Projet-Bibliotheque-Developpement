@@ -2,9 +2,6 @@
 #define USERCONTROL_H
 
 #include "webcam.h"
-#include "window.h"
-#include "ui_window.h"
-#include <QTimer>
 #include <QWidget>
 #include <iostream>
 

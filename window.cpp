@@ -9,7 +9,7 @@ Window::Window(QWidget *parent) : QWidget(parent), ui(new Ui::Window) {
       ui->setupUi(this);
       userControler=new UserControl();
       // Init usercontroler for the gamewidget
-
+        ui->frameJeu->userControler=this->userControler;
       isWebcamNeedsInitialization=true;
       QTimer *timer = new QTimer();
       timer->start();
