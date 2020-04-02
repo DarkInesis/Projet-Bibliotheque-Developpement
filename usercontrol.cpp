@@ -38,7 +38,7 @@ bool* UserControl::updateMove(){
     else if(direction=="bas") {
           moveBackward = true;
     }
-    return new bool[4] {moveRight,moveLeft,moveForward,moveBackward};
+    return new bool[4] {moveLeft, moveRight,moveForward,moveBackward};
 }
 
 bool UserControl::getNeedWebcamInitialization()
