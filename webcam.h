@@ -5,24 +5,26 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/objdetect.hpp>
-
+#include <QObject>
 #include <cstdio>
 #include <iostream>
 
-class Webcam {
+class Webcam : public QObject{
+    Q_OBJECT
      public:
-      Webcam();
+      Webcam(QWidget *parent = nullptr);
       cv::Mat captureMotion();
-      cv::Mat captureOrientation();
       int mult_capture();
-      cv::Mat initModel();
+      void initModel();
       bool getNeedWebcamInitialization();
       void resetAbsurdsDetectionStates();
+      void captureOrientation();
       std::string getDirection();
       int getCounterConsecutivesNull();
      private:
       cv::VideoCapture cap;
       cv::CascadeClassifier face_cascade;
+      cv::Mat frame;
       cv::Mat oldFrame;
       cv::Mat oldFrame_gray;
       cv::Mat modelFace;
@@ -38,6 +40,10 @@ class Webcam {
       int counterConsecutivesAbsurdsDetections = 0;
       int consecutiveAbsurdsDetectionsLimit = 10;
       int counterConsecutivesNull=0;
+    signals:
+      void webcamFrameCaptured(cv::Mat*);
+    public slots:
+      void capture();
 };
 
 #endif  // WEBCAM_H
