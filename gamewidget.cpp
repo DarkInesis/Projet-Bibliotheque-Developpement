@@ -75,6 +75,8 @@ void GameWidget::paintGL() {
 
       // update the states of booleans for the movement :
       bool* stateMove=this->userControler->updateMove();
+      // update the state of boolean isNeededToPaint2DLabyrinthe :
+      this->isNeededToPaint2DLabyrinthe=this->userControler->getNeedToPaint2DLabyrinthe();
 
       moveLeft=stateMove[0];moveRight=stateMove[1];moveForward=stateMove[2];moveBackward=stateMove[3];
       userMove();

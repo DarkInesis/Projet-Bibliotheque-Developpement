@@ -19,7 +19,7 @@ class Webcam {
       bool getNeedWebcamInitialization();
       void resetAbsurdsDetectionStates();
       std::string getDirection();
-
+      int getCounterConsecutivesNull();
      private:
       cv::VideoCapture cap;
       cv::CascadeClassifier face_cascade;
@@ -37,6 +37,7 @@ class Webcam {
       bool needWebcamInitialization = true;
       int counterConsecutivesAbsurdsDetections = 0;
       int consecutiveAbsurdsDetectionsLimit = 10;
+      int counterConsecutivesNull=0;
 };
 
 #endif  // WEBCAM_H

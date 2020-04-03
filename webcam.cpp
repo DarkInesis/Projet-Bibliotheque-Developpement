@@ -88,14 +88,19 @@ Mat Webcam::captureOrientation() {
                                    templateHeight);
                   if (vect.x > motionDetect_minLimit_horizontal) {
                         direction = "droite";
+                        this->counterConsecutivesNull=0;
                   } else if (vect.x < -motionDetect_minLimit_horizontal) {
                         direction = "gauche";
+                        this->counterConsecutivesNull=0;
                   } else if (vect.y > motionDetect_minLimit_vertical) {
                         direction = "bas";
+                        this->counterConsecutivesNull=0;
                   } else if (vect.y < -motionDetect_minLimit_vertical) {
                         direction = "haut";
+                        this->counterConsecutivesNull=0;
                   } else {
                         direction = "null";
+                        this->counterConsecutivesNull+=1;
                         // Redefinition du model ( à revoir)
                         this->modelFace = Mat(frame_gray, MatchedZone);
                   }
@@ -161,4 +166,7 @@ void Webcam::resetAbsurdsDetectionStates() {
 }
 std::string Webcam::getDirection(){
     return this->direction;
+}
+int Webcam::getCounterConsecutivesNull(){
+    return this->counterConsecutivesNull;
 }
