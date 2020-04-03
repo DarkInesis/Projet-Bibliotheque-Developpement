@@ -8,14 +8,17 @@
 #include <QWheelEvent>
 #include <QKeyEvent>
 #include <QTimer>
+#include "usercontrol.h"
 
 // Classe dediee a l'affichage d'une scene OpenGL
 class GameWidget : public QGLWidget {
       Q_OBJECT
 
      public:
+        UserControl* userControler;
       // Moving directions
       bool moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
+
       // Game variable
       bool ball_found = false;
       // Position de départ (centre de la première case)
@@ -54,6 +57,8 @@ class GameWidget : public QGLWidget {
       float m_TimeElapsed{0.0f};
       QTimer m_AnimationTimer;
       Ball *ball;
+
+
 };
 
 #endif  // GAMEWIDGET_H

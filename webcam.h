@@ -8,36 +8,35 @@
 
 #include <cstdio>
 #include <iostream>
-#include "window.h"
 
-class webcam
-{
-public:
-    webcam(class Window*);
-    cv::Mat captureMotion();
-    cv::Mat captureOrientation();
-    int mult_capture();
-    cv::Mat initModel();
-    bool getNeedWebcamInitialization();
-    void resetAbsurdsDetectionStates();
-private:
-    class Window* window;
-    cv::VideoCapture cap;
-    cv::CascadeClassifier face_cascade;
-    cv::Mat oldFrame;
-    cv::Mat oldFrame_gray;
-    cv::Mat modelFace;
-    cv::Mat firstModel;
-    cv::Rect templateRect;
+class Webcam {
+     public:
+      Webcam();
+      cv::Mat captureMotion();
+      cv::Mat captureOrientation();
+      int mult_capture();
+      cv::Mat initModel();
+      bool getNeedWebcamInitialization();
+      void resetAbsurdsDetectionStates();
+      std::string getDirection();
 
-    int frameWidth;
-    int frameHeight;
-    int templateWidth;
-    int templateHeight;
+     private:
+      cv::VideoCapture cap;
+      cv::CascadeClassifier face_cascade;
+      cv::Mat oldFrame;
+      cv::Mat oldFrame_gray;
+      cv::Mat modelFace;
+      cv::Mat firstModel;
+      cv::Rect templateRect;
 
-    bool needWebcamInitialization=true;
-    int counterConsecutivesAbsurdsDetections=0;
-    int consecutiveAbsurdsDetectionsLimit=10;
+      int frameWidth;
+      int frameHeight;
+      int templateWidth;
+      int templateHeight;
+      std::string direction="null";
+      bool needWebcamInitialization = true;
+      int counterConsecutivesAbsurdsDetections = 0;
+      int consecutiveAbsurdsDetectionsLimit = 10;
 };
 
-#endif // WEBCAM_H
+#endif  // WEBCAM_H

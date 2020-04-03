@@ -2,10 +2,10 @@
 #define WINDOW_H
 
 #include <QWidget>
-#include <thread>
 #include <iostream>
 #include "webcam.h"
 #include "gamewidget.h"
+#include "usercontrol.h"
 
 namespace Ui {
 class Window;
@@ -17,12 +17,12 @@ class Window : public QWidget {
      public:
       explicit Window(QWidget* parent = nullptr);
       ~Window();
-      void updateVisage(cv::Mat img);
-
+      void updateStateInitialisationButton();
      private:
       Ui::Window* ui;
-      class webcam* myWebCam;
-      GameWidget* gameWidget;
+     GameWidget* gameWidget;
+     class UserControl* userControler;
+     bool isWebcamNeedsInitialization;
      private slots:
       void update();
       void on_buttonInitWebCam_clicked();
