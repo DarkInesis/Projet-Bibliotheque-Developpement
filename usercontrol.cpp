@@ -2,8 +2,10 @@
 #include <QEvent>
 using namespace cv;
 
-UserControl::UserControl() { myWebCam = new Webcam(); }
-
+UserControl::UserControl(QWidget* parent,Webcam* myWebCam) {
+    this->myWebCam=myWebCam;
+}
+/*
 QPixmap UserControl::getWebcamFrameQPixMap() {
     cv::Mat frame;
     if (myWebCam->getNeedWebcamInitialization()) {
@@ -17,11 +19,11 @@ QPixmap UserControl::getWebcamFrameQPixMap() {
                        QImage::Format_RGB888);  // Converts the CV image into Qt standard format
       return QPixmap::fromImage(imdisplay);
 }
+*/
 bool* UserControl::updateMove(){
     //mettre à jour valeur direction gamewidget
     std::string direction="";
     direction=myWebCam->getDirection();
-    std::cout<<direction<<std::endl;
      bool moveRight=false;
      bool moveLeft=false;
      bool moveForward=false;

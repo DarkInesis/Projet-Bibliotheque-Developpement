@@ -3,7 +3,7 @@
 using namespace cv;
 using namespace std;
 
-Webcam::Webcam() {
+Webcam::Webcam(QWidget* parent) {
       // data
       frameWidth = 640;
       frameHeight = 480;
@@ -32,8 +32,8 @@ Webcam::Webcam() {
       cv::cvtColor(oldFrame, oldFrame_gray, COLOR_BGR2GRAY);
 }
 
-Mat Webcam::captureOrientation() {
-      Mat frame, frame_gray;
+void Webcam::captureOrientation() {
+      Mat frame_gray;
       std::vector<Rect> faces;
       // Get frame
       cap >> frame;
@@ -106,6 +106,7 @@ Mat Webcam::captureOrientation() {
                   }
                   std::cout << direction << endl;
 
+
                   // Dessin du rectangle
                   rectangle(frame, MatchedZone, Scalar(255, 255, 0), 2);
             } else {
@@ -118,11 +119,12 @@ Mat Webcam::captureOrientation() {
       }
       // Swap matrixes
       swap(oldFrame_gray, frame_gray);
-      return frame;
+      Mat* newFrame=new Mat(frame);
+      emit webcamFrameCaptured(newFrame);
 }
 
-cv::Mat Webcam::initModel() {
-      Mat frame, frame_gray;
+void Webcam::initModel() {
+      Mat frame_gray;
       std::vector<Rect> faces;
       // Get frame
       cap >> frame;
@@ -155,7 +157,8 @@ cv::Mat Webcam::initModel() {
 
       // Swap matrixes
       swap(oldFrame_gray, frame_gray);
-      return frame;
+      Mat* newFrame=new Mat(frame);
+      emit webcamFrameCaptured(newFrame);
 }
 
 bool Webcam::getNeedWebcamInitialization() { return this->needWebcamInitialization; }
