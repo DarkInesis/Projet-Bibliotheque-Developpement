@@ -16,6 +16,7 @@ class UserControl {
       bool* updateMove();
       bool getNeedWebcamInitialization();
       void resetAbsurdsDetectionStates();
+      bool getNeedToPaint2DLabyrinthe();
 };
 
 #endif  // USERCONTROL_H

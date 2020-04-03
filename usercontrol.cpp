@@ -1,5 +1,5 @@
 #include "usercontrol.h"
-
+#include <QEvent>
 using namespace cv;
 
 UserControl::UserControl() { myWebCam = new Webcam(); }
@@ -51,4 +51,6 @@ void UserControl::resetAbsurdsDetectionStates()
     myWebCam->resetAbsurdsDetectionStates();
 }
 
-
+bool UserControl::getNeedToPaint2DLabyrinthe(){
+    return myWebCam->getCounterConsecutivesNull()>5;
+}
