@@ -18,6 +18,7 @@ class Webcam : public QObject{
       void initModel();
       bool getNeedWebcamInitialization();
       void resetAbsurdsDetectionStates();
+      void captureOrientation();
       std::string getDirection();
       int getCounterConsecutivesNull();
      private:
@@ -42,7 +43,7 @@ class Webcam : public QObject{
     signals:
       void webcamFrameCaptured(cv::Mat*);
     public slots:
-      void captureOrientation();
+      void capture();
 };
 
 #endif  // WEBCAM_H

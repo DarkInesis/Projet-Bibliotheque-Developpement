@@ -31,6 +31,14 @@ Webcam::Webcam(QWidget* parent) {
       // Convert to gray
       cv::cvtColor(oldFrame, oldFrame_gray, COLOR_BGR2GRAY);
 }
+void Webcam::capture(){
+    if (needWebcamInitialization){
+        initModel();
+    }
+    else{
+        captureOrientation();
+    }
+}
 
 void Webcam::captureOrientation() {
       Mat frame_gray;

@@ -8,6 +8,6 @@ void ThreadWebcam::run()
 {
     while (true){
         emit signalWebcamToCapture();
-        wait(10);
+        wait(50);
     }
 }

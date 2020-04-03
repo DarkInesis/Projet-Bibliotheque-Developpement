@@ -15,7 +15,7 @@ Window::Window(QWidget *parent) : QWidget(parent), ui(new Ui::Window) {
       QTimer *timer = new QTimer();
       timer->start();
       //connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-      connect(&threadWebcam,SIGNAL(signalWebcamToCapture()),myWebCam,SLOT(captureOrientation()));
+      connect(&threadWebcam,SIGNAL(signalWebcamToCapture()),myWebCam,SLOT(capture()));
       connect(myWebCam,SIGNAL(webcamFrameCaptured(cv::Mat*)),this,SLOT(update(cv::Mat*)));
       myWebCam->moveToThread(&threadWebcam);
       threadWebcam.start();
