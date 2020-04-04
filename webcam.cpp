@@ -21,7 +21,7 @@ Webcam::Webcam(QWidget* parent) {
             cerr << "Error openning the default camera" << endl;
       }
       if (!face_cascade.load(
-              "../Projet-Bibliotheque-Developpement/resources/haarcascade_frontalface_alt2.xml")) {
+              "../Projet-Bibliotheque-Developpement/resources/haarcascade_frontalface_alt.xml")) {
             cerr << "Error loading haarcascade" << endl;
       }
       // get the firt capt
@@ -87,8 +87,8 @@ void Webcam::captureOrientation() {
             arrowedLine(frame, workingCenter, p, Scalar(255, 255, 255), 2);
             // Cas d'un mouvement raisonnable
             if (abs(vect.x) < 50 && abs(vect.y) < 50) {
-                  int motionDetect_minLimit_vertical = 3;
-                  int motionDetect_minLimit_horizontal = 7;
+                  int motionDetect_minLimit_vertical = 4;
+                  int motionDetect_minLimit_horizontal = 8;
                   // Cas d'un mouvement léger
                   Rect MatchedZone(p.x - templateWidth / 2, p.y - templateHeight / 2, templateWidth,
                                    templateHeight);

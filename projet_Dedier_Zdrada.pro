@@ -75,13 +75,4 @@ DISTFILES += \
     resources/haarcascade_frontalface_alt2.xml \
     resources/haarcascade_frontalface_alt_tree.xml \
     resources/haarcascade_frontalface_default.xml \
-    resources/haarcascade_fullbody.xml \
-    resources/haarcascade_lefteye_2splits.xml \
-    resources/haarcascade_licence_plate_rus_16stages.xml \
-    resources/haarcascade_lowerbody.xml \
-    resources/haarcascade_profileface.xml \
-    resources/haarcascade_righteye_2splits.xml \
-    resources/haarcascade_russian_plate_number.xml \
-    resources/haarcascade_smile.xml \
-    resources/haarcascade_upperbody.xml \
     resources/logo_tse.png
