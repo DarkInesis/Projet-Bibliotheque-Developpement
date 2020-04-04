@@ -8,9 +8,6 @@ using namespace cv;
 Window::Window(QWidget *parent) : QWidget(parent), ui(new Ui::Window) {
       ui->setupUi(this);
       this->myWebCam=new Webcam();
-      userControler=new UserControl(this,myWebCam);
-      // Init usercontroler for the gamewidget
-      ui->frameJeu->userControler=this->userControler;
       // Initialisation des composants servant à demander l'initialisation de la webcam
       isWebcamNeedsInitialization=true;
 

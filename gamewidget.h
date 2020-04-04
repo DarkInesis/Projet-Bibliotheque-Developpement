@@ -8,14 +8,12 @@
 #include <QWheelEvent>
 #include <QKeyEvent>
 #include <QTimer>
-#include "usercontrol.h"
 
 // Classe dediee a l'affichage d'une scene OpenGL
 class GameWidget : public QGLWidget {
       Q_OBJECT
 
      public:
-        UserControl* userControler;
         // Booléen qui indique si il faut dessiner ou non le labyrinthe 2D
         bool isNeededToPaint2DLabyrinthe=true;
 

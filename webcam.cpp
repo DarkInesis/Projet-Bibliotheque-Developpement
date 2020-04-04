@@ -169,19 +169,10 @@ void Webcam::initModel() {
       emit webcamFrameCaptured(newFrame);
 }
 
-bool Webcam::getNeedWebcamInitialization() { return this->needWebcamInitialization; }
-
 void Webcam::resetAbsurdsDetectionStates() {
       setneedWebcamInitializationState(false);
       this->counterConsecutivesAbsurdsDetections = 0;
 }
-std::string Webcam::getDirection(){
-    return this->direction;
-}
-int Webcam::getCounterConsecutivesNull(){
-    return this->counterConsecutivesNull;
-}
-
 
 // Setters
 void Webcam::setDirection(string newDirection){

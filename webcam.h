@@ -14,13 +14,8 @@ class Webcam : public QObject{
      public:
       Webcam(QWidget *parent = nullptr);
       cv::Mat captureMotion();
-      int mult_capture();
       void initModel();
-      bool getNeedWebcamInitialization();
       void captureOrientation();
-      std::string getDirection();
-      int getCounterConsecutivesNull();
-
       void resetAbsurdsDetectionStates();
      private:
       cv::VideoCapture cap;
