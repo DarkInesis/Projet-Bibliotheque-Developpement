@@ -6,27 +6,23 @@ using namespace std;
 using namespace cv;
 
 Window::Window(QWidget *parent) : QWidget(parent), ui(new Ui::Window) {
-      ui->setupUi(this);
-      this->myWebCam=new Webcam();
-      // Initialisation des composants servant à demander l'initialisation de la webcam
-      isWebcamNeedsInitialization=true;
+    ui->setupUi(this);
+    this->myWebCam = new Webcam();
 
-      // Connection permettant de mettre a jour l'etat du bouton lors d'un changement d'etat de la webcam
-      connect(myWebCam,SIGNAL(needWebcamInitializationStateChanged(bool)),this,SLOT(updateStateInitialisationButton(bool)));
-      // Connection permettant de mettre a jour la direction dans l'openGLWidget
-      connect(myWebCam,SIGNAL(directionChanged(QString)),ui->frameJeu,SLOT(updateDirection(QString)));
-      // Connection permettant de mettre a jour le booleen indiquant si on doit dessiner le labyrinthe en 2D
-      connect(myWebCam,SIGNAL(needToPaint2DLabyrinthe(bool)),ui->frameJeu,SLOT(updateNeedToPaint2DLabyrinthe(bool)));
-      // Connection entre le thread et myWebCam
-      connect(&threadWebcam,SIGNAL(signalWebcamToCapture()),myWebCam,SLOT(capture()));
-      connect(myWebCam,SIGNAL(webcamFrameCaptured(cv::Mat*)),this,SLOT(update(cv::Mat*)));
-      myWebCam->moveToThread(&threadWebcam);
+    qRegisterMetaType<Webcam::Move>("Move");
 
+    // Initialisation des composants servant à demander l'initialisation de la webcam
+    isWebcamNeedsInitialization = true;
 
-      threadWebcam.start();
+    // Connection permettant de mettre a jour la direction dans l'openGLWidget
+    connect(myWebCam, SIGNAL(directionChanged(Move)), ui->frameJeu, SLOT(updateDirection(Move)));
 
+    // Connection entre le thread et myWebCam
+    connect(myWebCam, SIGNAL(webcamFrameCaptured(cv::Mat *)), this, SLOT(update(cv::Mat *)));
+
+    myWebCam->start();
 }
-void Window::update(cv::Mat* frame) {
+void Window::update(cv::Mat *frame) {
     cv::resize((*frame), (*frame), Size(340, 255), 0, 0, INTER_LINEAR);
     cv::cvtColor((*frame), (*frame), COLOR_BGR2RGB);  // Qt reads in RGB whereas CV in BGR
     QImage imdisplay((uchar *)(*frame).data, (*frame).cols, (*frame).rows, (*frame).step,
@@ -38,16 +34,12 @@ void Window::update(cv::Mat* frame) {
 
 Window::~Window() { delete ui; }
 
-void Window::updateStateInitialisationButton(bool needWebcamInitialization)
-{
+void Window::updateStateInitialisationButton(bool needWebcamInitialization) {
     if (needWebcamInitialization) {
-          ui->buttonInitWebCam->setEnabled(true);
+        ui->buttonInitWebCam->setEnabled(true);
     } else {
-          ui->buttonInitWebCam->setEnabled(false);
+        ui->buttonInitWebCam->setEnabled(false);
     }
 }
 
-void Window::on_buttonInitWebCam_clicked()
-{
-    myWebCam->resetAbsurdsDetectionStates();
-}
+void Window::on_buttonInitWebCam_clicked() { myWebCam->resetInitFace(); }

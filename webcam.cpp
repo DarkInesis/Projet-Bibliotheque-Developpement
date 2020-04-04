@@ -1,202 +1,173 @@
 #include "webcam.h"
 
-using namespace cv;
 using namespace std;
+using namespace cv;
 
-Webcam::Webcam(QWidget* parent) {
-      // data
-      frameWidth = 640;
-      frameHeight = 480;
-      templateWidth = 40;
-      templateHeight = 40;
-      // Init state variable
-      needWebcamInitialization = true;
-      this->counterConsecutivesAbsurdsDetections = 0;
-      // Init webcam
-      cap.open(0);
-      cap.set(CAP_PROP_FRAME_WIDTH, frameWidth);
-      cap.set(CAP_PROP_FRAME_HEIGHT, frameHeight);
-      if (!cap.isOpened())  // check if we succeeded
-      {
-            cerr << "Error openning the default camera" << endl;
-      }
-      if (!face_cascade.load(
-              "../Projet-Bibliotheque-Developpement/resources/haarcascade_frontalface_alt.xml")) {
-            cerr << "Error loading haarcascade" << endl;
-      }
-      // get the firt capt
-      cap >> oldFrame;
-      // Mirror effect
-      cv::flip(oldFrame, oldFrame, 1);
-      // Convert to gray
-      cv::cvtColor(oldFrame, oldFrame_gray, COLOR_BGR2GRAY);
-}
-void Webcam::capture(){
-    if (needWebcamInitialization){
-        initModel();
+Webcam::Webcam() {
+    // Fait en sorte que les slots de ce thread soit exécutés dans ce thread
+    // moveToThread ne marche que sur les QObject sans parent
+    setParent(0);
+    moveToThread(this);
+
+    cap = VideoCapture(0);  // open the default camera
+    cout << "width :" << cap.get(CAP_PROP_FRAME_WIDTH) << endl;
+    cout << "height :" << cap.get(CAP_PROP_FRAME_HEIGHT) << endl;
+    cap.set(CAP_PROP_FRAME_WIDTH, frameWidth);
+    cap.set(CAP_PROP_FRAME_HEIGHT, frameHeight);
+    if (!cap.isOpened())  // check if we succeeded
+    {
+        cerr << "Error openning the default camera" << endl;
+        return;
     }
-    else{
-        captureOrientation();
+
+    if (!face_cascade.load(
+            "../Projet-Bibliotheque-Developpement/resources/haarcascade_frontalface_alt.xml")) {
+        cerr << "Error loading haarcascade" << endl;
     }
 }
 
-void Webcam::captureOrientation() {
-      Mat frame_gray;
-      std::vector<Rect> faces;
-      // Get frame
-      cap >> frame;
-      // Mirror effect
-      cv::flip(frame, frame, 1);
-      // Convert to gray
-      cv::cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
-      // Equalize graylevels
-      equalizeHist(frame_gray, frame_gray);
+void Webcam::detectMotion() {
+    int templateWidth = 25;
+    int templateHeight = 25;
 
-      // Create the matchTemplate image result
-      Mat resultImage;  // to store the matchTemplate result
-      int result_cols = frame.cols - templateWidth + 1;
-      int result_rows = frame.rows - templateHeight + 1;
-      resultImage.create(result_cols, result_rows, CV_32FC1);
-      //-- Detect faces
-      face_cascade.detectMultiScale(frame_gray, faces, 1.1, 4, 0, Size(60, 60));
-      if (faces.size() == 1) {
-            Rect workingRect = faces[0];
-            templateRect = Rect(workingRect.x + (workingRect.width - templateWidth) / 2,
-                                workingRect.y + (workingRect.height - templateHeight) / 2,
-                                templateWidth, templateHeight);
-            cv::Point workingCenter(workingRect.x + workingRect.width / 2,
-                                    workingRect.y + workingRect.height / 2);
-            if (modelFace.empty()) {
-                  initModel();
-            }
+    Rect templateRect((face.width - templateWidth) / 2, (face.height - templateHeight) / 2,
+                      templateWidth, templateHeight);
 
-            // Do the Matching between the working rect in frame2 and the templateImage in frame1
-            matchTemplate(frame_gray, modelFace, resultImage, TM_CCORR_NORMED);
-            // Localize the best match with minMaxLoc
-            double minVal;
-            double maxVal;
-            cv::Point minLoc;
-            cv::Point maxLoc;
-            minMaxLoc(resultImage, &minVal, &maxVal, &minLoc, &maxLoc);
-            // Compute the translation vector between the origin and the matching rect
-            cv::Point vect(maxLoc.x - templateRect.x, maxLoc.y - templateRect.y);
-            // Draw green rectangle and the translation vector
-            rectangle(frame, workingRect, Scalar(0, 255, 0), 2);
-            rectangle(frame, templateRect, Scalar(255, 0, 0), 2);
-            cv::Point p(workingCenter.x + vect.x, workingCenter.y + vect.y);
-            arrowedLine(frame, workingCenter, p, Scalar(255, 255, 255), 2);
-            // Cas d'un mouvement raisonnable
-            if (abs(vect.x) < 50 && abs(vect.y) < 50) {
-                  int motionDetect_minLimit_vertical = 4;
-                  int motionDetect_minLimit_horizontal = 8;
-                  // Cas d'un mouvement léger
-                  Rect MatchedZone(p.x - templateWidth / 2, p.y - templateHeight / 2, templateWidth,
-                                   templateHeight);
-                  if (vect.x > motionDetect_minLimit_horizontal) {
-                        setDirection("droite");
-                        setCounterConsecutivesNull(0);
-                  } else if (vect.x < -motionDetect_minLimit_horizontal) {
-                        setDirection("gauche");
-                        setCounterConsecutivesNull(0);
-                  } else if (vect.y > motionDetect_minLimit_vertical) {
-                        setDirection("bas");
-                        setCounterConsecutivesNull(0);
-                  } else if (vect.y < -motionDetect_minLimit_vertical) {
-                        setDirection("haut");
-                        setCounterConsecutivesNull(0);
-                  } else {
-                        setDirection("null");
-                        setCounterConsecutivesNull(counterConsecutivesNull+1);
-                        // Redefinition du model ( à revoir)
-                        this->modelFace = Mat(frame_gray, MatchedZone);
-                  }
-                  std::cout << direction << endl;
+    Mat frame1, frame2, frameRect1, frameRect2;
 
+    // Get frame1
+    frame1 = init_frame.clone();
+    // Mirror effect
+    cv::flip(frame1, frame1, 1);
+    // Extract rect1 and convert to gray
+    cv::cvtColor(Mat(frame1, face), frameRect1, COLOR_BGR2GRAY);
+    // Mat(frame1,rect).copyTo(frameRect1);
 
-                  // Dessin du rectangle
-                  rectangle(frame, MatchedZone, Scalar(255, 255, 0), 2);
-            } else {
-                  this->counterConsecutivesAbsurdsDetections += 1;
-                  if (this->counterConsecutivesAbsurdsDetections >=
-                      this->consecutiveAbsurdsDetectionsLimit) {
-                      setneedWebcamInitializationState(true);
-                  }
-            }
-      }else{
-          setDirection("No detection");
-      }
-      // Swap matrixes
-      swap(oldFrame_gray, frame_gray);
-      Mat* newFrame=new Mat(frame);
-      emit webcamFrameCaptured(newFrame);
+    // Create the matchTemplate image result
+    Mat resultImage;  // to store the matchTemplate result
+    int result_cols = frame1.cols - templateWidth + 1;
+    int result_rows = frame1.rows - templateHeight + 1;
+    resultImage.create(result_cols, result_rows, CV_32FC1);
+
+    // Get frame2
+    frame2 = current_frame.clone();
+
+    // Mirror effect
+    cv::flip(frame2, frame2, 1);
+    // Extract working rect in frame2 and convert to gray
+    cv::cvtColor(Mat(frame2, face), frameRect2, COLOR_BGR2GRAY);
+
+    // Extract template image in frame1
+    Mat templateImage(frameRect1, templateRect);
+    // Do the Matching between the working rect in frame2 and the templateImage in frame1
+    matchTemplate(frameRect2, templateImage, resultImage, TM_CCORR_NORMED);
+    // Localize the best match with minMaxLoc
+    double minVal;
+    double maxVal;
+    Point minLoc;
+    Point maxLoc;
+    minMaxLoc(resultImage, &minVal, &maxVal, &minLoc, &maxLoc);
+    // Compute the translation vector between the origin and the matching rect
+    vect = Point(maxLoc.x - templateRect.x, maxLoc.y - templateRect.y);
+
+    // Draw green rectangle and the translation vector
+    p = Point(face_center.x + vect.x, face_center.y + vect.y);
+
+    // std::cout << "vect.x = " << vect.x << "  vect.y = " << vect.y << endl;
 }
 
-void Webcam::initModel() {
-      Mat frame_gray;
-      std::vector<Rect> faces;
-      // Get frame
-      cap >> frame;
-      // Mirror effect
-      cv::flip(frame, frame, 1);
-      // Convert to gray
-      cv::cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
-      // Equalize graylevels
-      equalizeHist(frame_gray, frame_gray);
+void Webcam::detectFace() {
+    Mat frame, frame_gray;
+    std::vector<Rect> faces;
 
-      // Create the matchTemplate image result
-      Mat resultImage;  // to store the matchTemplate result
-      int result_cols = frame.cols - templateWidth + 1;
-      int result_rows = frame.rows - templateHeight + 1;
-      resultImage.create(result_cols, result_rows, CV_32FC1);
-      //-- Detect faces
-      face_cascade.detectMultiScale(frame_gray, faces, 1.1, 4, 0, Size(60, 60));
+    // Get frame
+    cap >> init_frame;
 
-      if (faces.size() == 1) {
-            Rect workingRect = faces[0];
-            templateRect = Rect(workingRect.x + (workingRect.width - templateWidth) / 2,
-                                workingRect.y + (workingRect.height - templateHeight) / 2,
-                                templateWidth, templateHeight);
-            cv::Point workingCenter(workingRect.x + workingRect.width / 2,
-                                    workingRect.y + workingRect.height / 2);
-            rectangle(frame, workingRect, Scalar(0, 255, 0), 2);
-            rectangle(frame, templateRect, Scalar(255, 0, 0), 2);
-            this->modelFace = Mat(frame_gray, templateRect);
-      }
+    current_frame = init_frame.clone();
 
-      // Swap matrixes
-      swap(oldFrame_gray, frame_gray);
-      Mat* newFrame=new Mat(frame);
-      emit webcamFrameCaptured(newFrame);
-}
+    frame = init_frame.clone();
 
-void Webcam::resetAbsurdsDetectionStates() {
-      setneedWebcamInitializationState(false);
-      this->counterConsecutivesAbsurdsDetections = 0;
-}
+    // Mirror effect
+    cv::flip(frame, frame, 1);
+    // Convert to gray
+    cv::cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
+    // Equalize graylevels
+    //        equalizeHist( frame_gray, frame_gray );
+    //-- Detect faces
+    face_cascade.detectMultiScale(frame_gray, faces, 1.1, 4, 0, Size(60, 60));
 
-// Setters
-void Webcam::setDirection(string newDirection){
-    if(this->direction != newDirection){
-        direction=newDirection;
-        QString Qdirection=QString::fromStdString(direction);
-        emit directionChanged(Qdirection);
+    if (faces.size() == 1) {
+        face = faces[0];
+        face_center = Point(face.x + face.width / 2, face.y + face.height / 2);
+        isUpdated = true;
+    } else {
+        resetInitFace();
     }
 }
-void Webcam::setneedWebcamInitializationState(bool newState){
-    if(this->needWebcamInitialization != newState){
-        needWebcamInitialization=newState;
-        emit needWebcamInitializationStateChanged(newState);
-    }
+
+void Webcam::getDirection() {
+    Move new_direction;
+    if (vect.x > 35 || vect.x < -35 || vect.y > 35 || vect.y < -35) {
+        // Reupdate init face
+        face = Rect(0, 0, 0, 0);
+        face_center = Point(0, 0);
+        isUpdated = false;
+    } else if (vect.x > 15 && vect.y < 15 && vect.y > -15)
+        new_direction = DROITE;
+    else if (vect.x < -15 && vect.y < 15 && vect.y > -15)
+        new_direction = GAUCHE;
+    else if (vect.y > 15 && vect.x < 15 && vect.x > -15)
+        new_direction = ARRIERE;
+    else if (vect.y < -15 && vect.x < 15 && vect.x > -15)
+        new_direction = AVANT;
+    else
+        new_direction = NEUTRE;
+
+    if (new_direction == DROITE)
+        cout << "Direction : DROTIE" << endl;
+    else if (new_direction == GAUCHE)
+        cout << "Direction : GAUCHE" << endl;
+    else if (new_direction == ARRIERE)
+        cout << "Direction : ARRIERE" << endl;
+    else if (new_direction == AVANT)
+        cout << "Direction : AVANT" << endl;
+    else
+        cout << "Direction : NEUTRE" << endl;
+
+    if (new_direction != direction) emit directionChanged(new_direction);
+    direction = new_direction;
 }
-void Webcam::setCounterConsecutivesNull(int newCount){
-    if(this->counterConsecutivesNull != newCount){
-        counterConsecutivesNull=newCount;
-        if (counterConsecutivesNull>=5)
-        {
-            emit needToPaint2DLabyrinthe(true);
+
+void Webcam::resetInitFace() {
+    // Reupdate init face
+    face = Rect(0, 0, 0, 0);
+    face_center = Point(0, 0);
+    isUpdated = false;
+}
+
+void Webcam::run() {
+    // Init output window
+    //namedWindow("WebCam", 1);
+
+    while (waitKey(5) < 0) {
+        cap >> current_frame;
+
+        if (!isUpdated)
+            detectFace();
+        else {
+            detectMotion();
+            getDirection();
         }
-        else{
-            emit needToPaint2DLabyrinthe(false);
+        // Display current_frame
+        Mat display_frame;
+        cv::flip(current_frame, display_frame, 1);
+
+        if (true) {
+            //rectangle(display_frame, face, Scalar(0, 255, 0), 2);
+            //arrowedLine(display_frame, face_center, p, Scalar(255, 255, 255), 2);
+            emit webcamFrameCaptured(&display_frame);
         }
+
+        // imshow("WebCam", display_frame);
     }
 }

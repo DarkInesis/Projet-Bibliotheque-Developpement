@@ -11,26 +11,24 @@ class Window;
 }
 
 class Window : public QWidget {
-      Q_OBJECT
+    Q_OBJECT
 
-     public:
-      explicit Window(QWidget* parent = nullptr);
-      ~Window();
+   public:
+    explicit Window(QWidget* parent = nullptr);
+    ~Window();
 
+   private:
+    Ui::Window* ui;
+    GameWidget* gameWidget;
+    class UserControl* userControler;
+    Webcam* myWebCam;
+    bool isWebcamNeedsInitialization;
+    // ThreadWebcam threadWebcam;
 
-     private:
-      Ui::Window* ui;
-     GameWidget* gameWidget;
-     class UserControl* userControler;
-     Webcam* myWebCam;
-     bool isWebcamNeedsInitialization;
-
-     ThreadWebcam threadWebcam;
-     private slots:
-      void update(cv::Mat*);
-      void on_buttonInitWebCam_clicked();
-      void updateStateInitialisationButton(bool);
-
+   private slots:
+    void update(cv::Mat*);
+    void on_buttonInitWebCam_clicked();
+    void updateStateInitialisationButton(bool);
 };
 
 #endif  // WINDOW_H
