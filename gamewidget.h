@@ -44,9 +44,6 @@ class GameWidget : public QGLWidget {
       // Fonction d'affichage
       void paintGL();
 
-      // Fonction de gestion d'interactions clavier
-      void keyPressEvent(QKeyEvent *event);
-      void keyReleaseEvent(QKeyEvent *event);
 
       void userMove();
       void detectCollision(float, float);

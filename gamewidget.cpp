@@ -103,77 +103,6 @@ void GameWidget::paintGL() {
       if (!ball_found) ball->Display();
 }
 
-// Fonction de gestion d'interactions clavier
-void GameWidget::keyPressEvent(QKeyEvent* event) {
-      switch (event->key()) {
-            case Qt::Key_Right: {
-                  moveRight = true;
-                  break;
-            }
-            case Qt::Key_Left: {
-                  moveLeft = true;
-                  break;
-            }
-            case Qt::Key_Up: {
-                  moveForward = true;
-                  break;
-            }
-            case Qt::Key_Down: {
-                  moveBackward = true;
-                  break;
-            }
-
-            case Qt::Key_A: {
-                  ball_found = true;
-                  labyrinthe->OpenExit();
-                  break;
-            }
-
-            // Sortie de l'application
-            case Qt::Key_Escape: {
-                  exit(0);
-            }
-
-            // Cas par defaut
-            default: {
-                  // Ignorer l'evenement
-                  event->ignore();
-                  return;
-            }
-      }
-
-      // Acceptation de l'evenement et mise a jour de la scene
-      event->accept();
-      updateGL();
-}
-
-void GameWidget::keyReleaseEvent(QKeyEvent* event) {
-      switch (event->key()) {
-            case Qt::Key_Right: {
-                  moveRight = false;
-                  break;
-            }
-            case Qt::Key_Left: {
-                  moveLeft = false;
-                  break;
-            }
-            case Qt::Key_Up: {
-                  moveForward = false;
-                  break;
-            }
-            case Qt::Key_Down: {
-                  moveBackward = false;
-                  break;
-            }
-            // Cas par defaut
-            default: {
-                  // Ignorer l'evenement
-                  event->ignore();
-                  return;
-            }
-      }
-}
-
 void GameWidget::userMove() {
       // Calcul de la position de la caméra
       if (moveRight) {
@@ -324,6 +253,8 @@ void GameWidget::checkUserWin() {
       }
 }
 
+
+// Slots
 void GameWidget::updateDirection(QString Qdirection)
 {
     string direction=Qdirection.toStdString();
