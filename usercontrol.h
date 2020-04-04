@@ -13,10 +13,9 @@ class UserControl : public QObject{
 
      public:
       UserControl(QWidget *parent = nullptr, Webcam * myWebCam=nullptr);
-      QPixmap getWebcamFrameQPixMap();
-      bool* updateMove();
+
       bool getNeedWebcamInitialization();
-      void resetAbsurdsDetectionStates();
+
       bool getNeedToPaint2DLabyrinthe();
 };
 

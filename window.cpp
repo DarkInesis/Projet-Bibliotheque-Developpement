@@ -10,15 +10,24 @@ Window::Window(QWidget *parent) : QWidget(parent), ui(new Ui::Window) {
       this->myWebCam=new Webcam();
       userControler=new UserControl(this,myWebCam);
       // Init usercontroler for the gamewidget
-        ui->frameJeu->userControler=this->userControler;
+      ui->frameJeu->userControler=this->userControler;
+      // Initialisation des composants servant à demander l'initialisation de la webcam
       isWebcamNeedsInitialization=true;
-      QTimer *timer = new QTimer();
-      timer->start();
-      //connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+
+      // Connection permettant de mettre a jour l'etat du bouton lors d'un changement d'etat de la webcam
+      connect(myWebCam,SIGNAL(needWebcamInitializationStateChanged(bool)),this,SLOT(updateStateInitialisationButton(bool)));
+      // Connection permettant de mettre a jour la direction dans l'openGLWidget
+      connect(myWebCam,SIGNAL(directionChanged(QString)),ui->frameJeu,SLOT(updateDirection(QString)));
+      // Connection permettant de mettre a jour le booleen indiquant si on doit dessiner le labyrinthe en 2D
+      connect(myWebCam,SIGNAL(needToPaint2DLabyrinthe(bool)),ui->frameJeu,SLOT(updateNeedToPaint2DLabyrinthe(bool)));
+      // Connection entre le thread et myWebCam
       connect(&threadWebcam,SIGNAL(signalWebcamToCapture()),myWebCam,SLOT(capture()));
       connect(myWebCam,SIGNAL(webcamFrameCaptured(cv::Mat*)),this,SLOT(update(cv::Mat*)));
       myWebCam->moveToThread(&threadWebcam);
+
+
       threadWebcam.start();
+
 }
 void Window::update(cv::Mat* frame) {
     cv::resize((*frame), (*frame), Size(340, 255), 0, 0, INTER_LINEAR);
@@ -28,18 +37,20 @@ void Window::update(cv::Mat* frame) {
     // Set the frame of the webcam into the widget
     ui->display_image->setPixmap(
         QPixmap::fromImage(imdisplay));  // display the image in label that is created earlier
-    updateStateInitialisationButton();
 }
 
 Window::~Window() { delete ui; }
 
-void Window::updateStateInitialisationButton()
+void Window::updateStateInitialisationButton(bool needWebcamInitialization)
 {
-    if (userControler->getNeedWebcamInitialization()) {
+    if (needWebcamInitialization) {
           ui->buttonInitWebCam->setEnabled(true);
     } else {
           ui->buttonInitWebCam->setEnabled(false);
     }
 }
 
-void Window::on_buttonInitWebCam_clicked() { userControler->resetAbsurdsDetectionStates(); }
+void Window::on_buttonInitWebCam_clicked()
+{
+    myWebCam->resetAbsurdsDetectionStates();
+}

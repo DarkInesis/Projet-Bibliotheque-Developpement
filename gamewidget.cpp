@@ -17,8 +17,6 @@ const float PI = 3.14159265359;
 
 // Constructeur
 GameWidget::GameWidget(QWidget* parent, int width, int height) : QGLWidget(parent) {
-    // Init controler
-    this->userControler=userControler;
       // Reglage de la taille/position
       setFixedSize(WIN_WIDTH, WIN_HEIGHT);
       move(QApplication::desktop()->screen()->rect().center() - rect().center());
@@ -73,13 +71,13 @@ void GameWidget::paintGL() {
       glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
       glLoadIdentity();
 
-      // update the states of booleans for the movement :
-      bool* stateMove=this->userControler->updateMove();
-      // update the state of boolean isNeededToPaint2DLabyrinthe :
-      this->isNeededToPaint2DLabyrinthe=this->userControler->getNeedToPaint2DLabyrinthe();
 
-      moveLeft=stateMove[0];moveRight=stateMove[1];moveForward=stateMove[2];moveBackward=stateMove[3];
+
       userMove();
+
+
+
+
 
       // Definition de la position de la camera
       gluLookAt(x_position, y_position, z_position, x_position + cos(angle_view_x * PI / 180),
@@ -324,4 +322,30 @@ void GameWidget::checkUserWin() {
             std::cout << "YOU WIN" << endl;
             this->close();
       }
+}
+
+void GameWidget::updateDirection(QString Qdirection)
+{
+    string direction=Qdirection.toStdString();
+     moveRight=false;
+     moveLeft=false;
+     moveForward=false;
+     moveBackward=false;
+    if(direction=="droite" ) {
+          moveRight = true;
+    }
+    else if(direction=="gauche") {
+          moveLeft = true;
+    }
+    else if(direction=="haut") {
+          moveForward = true;
+    }
+    else if(direction=="bas") {
+          moveBackward = true;
+    }
+}
+
+void GameWidget::updateNeedToPaint2DLabyrinthe(bool newNeedToPaint2DLabyrintheState)
+{
+    isNeededToPaint2DLabyrinthe=newNeedToPaint2DLabyrintheState;
 }

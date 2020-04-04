@@ -18,6 +18,7 @@ class GameWidget : public QGLWidget {
         UserControl* userControler;
         // Booléen qui indique si il faut dessiner ou non le labyrinthe 2D
         bool isNeededToPaint2DLabyrinthe=true;
+
       // Moving directions
       bool moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
 
@@ -59,7 +60,9 @@ class GameWidget : public QGLWidget {
       float m_TimeElapsed{0.0f};
       QTimer m_AnimationTimer;
       Ball *ball;
-
+public slots:
+      void updateDirection(QString);
+      void updateNeedToPaint2DLabyrinthe(bool);
 
 };
 
