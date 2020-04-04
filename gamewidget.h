@@ -8,16 +8,15 @@
 #include <QWheelEvent>
 #include <QKeyEvent>
 #include <QTimer>
-#include "usercontrol.h"
 
 // Classe dediee a l'affichage d'une scene OpenGL
 class GameWidget : public QGLWidget {
       Q_OBJECT
 
      public:
-        UserControl* userControler;
         // Booléen qui indique si il faut dessiner ou non le labyrinthe 2D
         bool isNeededToPaint2DLabyrinthe=true;
+
       // Moving directions
       bool moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
 
@@ -45,9 +44,6 @@ class GameWidget : public QGLWidget {
       // Fonction d'affichage
       void paintGL();
 
-      // Fonction de gestion d'interactions clavier
-      void keyPressEvent(QKeyEvent *event);
-      void keyReleaseEvent(QKeyEvent *event);
 
       void userMove();
       void detectCollision(float, float);
@@ -59,7 +55,9 @@ class GameWidget : public QGLWidget {
       float m_TimeElapsed{0.0f};
       QTimer m_AnimationTimer;
       Ball *ball;
-
+public slots:
+      void updateDirection(QString);
+      void updateNeedToPaint2DLabyrinthe(bool);
 
 };
 

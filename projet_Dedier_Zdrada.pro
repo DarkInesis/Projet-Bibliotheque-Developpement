@@ -31,7 +31,6 @@ SOURCES += \
     main.cpp \
     maze.cpp \
     threadwebcam.cpp \
-    usercontrol.cpp \
     webcam.cpp \
     window.cpp
 
@@ -59,7 +58,6 @@ HEADERS += \
     labyrinthe.h \
     maze.h \
     threadwebcam.h \
-    usercontrol.h \
     webcam.h \
     window.h
 

@@ -59,8 +59,6 @@ void Webcam::captureOrientation() {
       resultImage.create(result_cols, result_rows, CV_32FC1);
       //-- Detect faces
       face_cascade.detectMultiScale(frame_gray, faces, 1.1, 4, 0, Size(60, 60));
-      // init direction
-      direction="no_detection";
       if (faces.size() == 1) {
             Rect workingRect = faces[0];
             templateRect = Rect(workingRect.x + (workingRect.width - templateWidth) / 2,
@@ -95,20 +93,20 @@ void Webcam::captureOrientation() {
                   Rect MatchedZone(p.x - templateWidth / 2, p.y - templateHeight / 2, templateWidth,
                                    templateHeight);
                   if (vect.x > motionDetect_minLimit_horizontal) {
-                        direction = "droite";
-                        this->counterConsecutivesNull=0;
+                        setDirection("droite");
+                        setCounterConsecutivesNull(0);
                   } else if (vect.x < -motionDetect_minLimit_horizontal) {
-                        direction = "gauche";
-                        this->counterConsecutivesNull=0;
+                        setDirection("gauche");
+                        setCounterConsecutivesNull(0);
                   } else if (vect.y > motionDetect_minLimit_vertical) {
-                        direction = "bas";
-                        this->counterConsecutivesNull=0;
+                        setDirection("bas");
+                        setCounterConsecutivesNull(0);
                   } else if (vect.y < -motionDetect_minLimit_vertical) {
-                        direction = "haut";
-                        this->counterConsecutivesNull=0;
+                        setDirection("haut");
+                        setCounterConsecutivesNull(0);
                   } else {
-                        direction = "null";
-                        this->counterConsecutivesNull+=1;
+                        setDirection("null");
+                        setCounterConsecutivesNull(counterConsecutivesNull+1);
                         // Redefinition du model ( à revoir)
                         this->modelFace = Mat(frame_gray, MatchedZone);
                   }
@@ -121,9 +119,11 @@ void Webcam::captureOrientation() {
                   this->counterConsecutivesAbsurdsDetections += 1;
                   if (this->counterConsecutivesAbsurdsDetections >=
                       this->consecutiveAbsurdsDetectionsLimit) {
-                        this->needWebcamInitialization = true;
+                      setneedWebcamInitializationState(true);
                   }
             }
+      }else{
+          setDirection("No detection");
       }
       // Swap matrixes
       swap(oldFrame_gray, frame_gray);
@@ -169,15 +169,34 @@ void Webcam::initModel() {
       emit webcamFrameCaptured(newFrame);
 }
 
-bool Webcam::getNeedWebcamInitialization() { return this->needWebcamInitialization; }
-
 void Webcam::resetAbsurdsDetectionStates() {
-      this->needWebcamInitialization = false;
+      setneedWebcamInitializationState(false);
       this->counterConsecutivesAbsurdsDetections = 0;
 }
-std::string Webcam::getDirection(){
-    return this->direction;
+
+// Setters
+void Webcam::setDirection(string newDirection){
+    if(this->direction != newDirection){
+        direction=newDirection;
+        QString Qdirection=QString::fromStdString(direction);
+        emit directionChanged(Qdirection);
+    }
 }
-int Webcam::getCounterConsecutivesNull(){
-    return this->counterConsecutivesNull;
+void Webcam::setneedWebcamInitializationState(bool newState){
+    if(this->needWebcamInitialization != newState){
+        needWebcamInitialization=newState;
+        emit needWebcamInitializationStateChanged(newState);
+    }
+}
+void Webcam::setCounterConsecutivesNull(int newCount){
+    if(this->counterConsecutivesNull != newCount){
+        counterConsecutivesNull=newCount;
+        if (counterConsecutivesNull>=5)
+        {
+            emit needToPaint2DLabyrinthe(true);
+        }
+        else{
+            emit needToPaint2DLabyrinthe(false);
+        }
+    }
 }
