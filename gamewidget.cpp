@@ -76,13 +76,6 @@ void GameWidget::paintGL() {
     gluLookAt(x_position, y_position, z_position, x_position + cos(angle_view_x * PI / 180),
               y_position + sin(angle_view_x * PI / 180), z_position, 0, 0, 1);
 
-    //    // Definition de la position de la camera
-    //    gluLookAt((labyrinthe->maze.width_*coeff_move + SZ / 4) / 2,
-    //              -(labyrinthe->maze.height_*coeff_move + SZ / 4) / 2, 60,
-    //              (labyrinthe->maze.width_*coeff_move + SZ / 4) / 2,
-    //              -(labyrinthe->maze.height_*coeff_move + SZ / 4) / 2, 0, 0, 1,
-    //              1);
-
     glMatrixMode(GL_PROJECTION);
 
     glLoadIdentity();
@@ -92,8 +85,13 @@ void GameWidget::paintGL() {
     glMatrixMode(GL_MODELVIEW);
 
     labyrinthe->Display();
-
     if (!ball_found) ball->Display();
+
+    // 2D Part
+
+    float x = x_position / (labyrinthe->maze.width_ * coeff_move + SZ / 4);
+    float y = -y_position / (labyrinthe->maze.height_ * coeff_move + SZ / 4);
+    labyrinthe->Show2DMap(WIN_WIDTH, WIN_HEIGHT, x, y, angle_view_x);
 }
 
 void GameWidget::userMove() {

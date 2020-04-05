@@ -73,4 +73,5 @@ DISTFILES += \
     resources/haarcascade_frontalface_alt2.xml \
     resources/haarcascade_frontalface_alt_tree.xml \
     resources/haarcascade_frontalface_default.xml \
-    resources/logo_tse.png
+    resources/logo_tse.png \
+    resources/position.png

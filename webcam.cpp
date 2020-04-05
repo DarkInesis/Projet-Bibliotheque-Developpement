@@ -135,7 +135,7 @@ void Webcam::getDirection() {
 
     if (new_direction != direction) {
         counterChangeDirection++;
-        if (counterChangeDirection > 5) {
+        if (counterChangeDirection > 5 || new_direction == NEUTRE) {
             emit directionChanged(new_direction);
             counterChangeDirection = 0;
             direction = new_direction;
