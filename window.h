@@ -5,7 +5,7 @@
 #include <iostream>
 #include "webcam.h"
 #include "gamewidget.h"
-#include "threadwebcam.h"
+
 namespace Ui {
 class Window;
 }

@@ -55,7 +55,7 @@ class GameWidget : public QGLWidget {
     float m_TimeElapsed{0.0f};
     QTimer m_AnimationTimer;
     Ball *ball;
-   public slots:
+   private slots:
     void updateDirection(Webcam::Move);
 };
 

@@ -9,13 +9,14 @@ Window::Window(QWidget *parent) : QWidget(parent), ui(new Ui::Window) {
     ui->setupUi(this);
     this->myWebCam = new Webcam();
 
-    qRegisterMetaType<Webcam::Move>("Move");
+    qRegisterMetaType<Webcam::Move>("Webcam::Move");
 
     // Initialisation des composants servant à demander l'initialisation de la webcam
     isWebcamNeedsInitialization = true;
 
     // Connection permettant de mettre a jour la direction dans l'openGLWidget
-    connect(myWebCam, SIGNAL(directionChanged(Move)), ui->frameJeu, SLOT(updateDirection(Move)));
+    connect(myWebCam, SIGNAL(directionChanged(Webcam::Move)), ui->frameJeu,
+            SLOT(updateDirection(Webcam::Move)));
 
     // Connection entre le thread et myWebCam
     connect(myWebCam, SIGNAL(webcamFrameCaptured(cv::Mat *)), this, SLOT(update(cv::Mat *)));
@@ -42,4 +43,7 @@ void Window::updateStateInitialisationButton(bool needWebcamInitialization) {
     }
 }
 
-void Window::on_buttonInitWebCam_clicked() { myWebCam->resetInitFace(); }
+void Window::on_buttonInitWebCam_clicked() {
+    myWebCam->needUpdate();
+    ;
+}

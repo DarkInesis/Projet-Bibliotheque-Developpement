@@ -107,11 +107,10 @@ void Webcam::detectFace() {
 
 void Webcam::getDirection() {
     Move new_direction;
-    if (vect.x > 35 || vect.x < -35 || vect.y > 35 || vect.y < -35) {
-        // Reupdate init face
-        face = Rect(0, 0, 0, 0);
-        face_center = Point(0, 0);
-        isUpdated = false;
+    if (vect.x > 50 || vect.x < -50 || vect.y > 50 || vect.y < -50) {
+        counterAbsurde++;
+        if (counterAbsurde > 15) resetInitFace();
+        new_direction = NEUTRE;
     } else if (vect.x > 15 && vect.y < 15 && vect.y > -15)
         new_direction = DROITE;
     else if (vect.x < -15 && vect.y < 15 && vect.y > -15)
@@ -123,19 +122,25 @@ void Webcam::getDirection() {
     else
         new_direction = NEUTRE;
 
-    if (new_direction == DROITE)
-        cout << "Direction : DROTIE" << endl;
-    else if (new_direction == GAUCHE)
-        cout << "Direction : GAUCHE" << endl;
-    else if (new_direction == ARRIERE)
-        cout << "Direction : ARRIERE" << endl;
-    else if (new_direction == AVANT)
-        cout << "Direction : AVANT" << endl;
-    else
-        cout << "Direction : NEUTRE" << endl;
+    //    if (new_direction == DROITE)
+    //        cout << "Direction : DROTIE" << endl;
+    //    else if (new_direction == GAUCHE)
+    //        cout << "Direction : GAUCHE" << endl;
+    //    else if (new_direction == ARRIERE)
+    //        cout << "Direction : ARRIERE" << endl;
+    //    else if (new_direction == AVANT)
+    //        cout << "Direction : AVANT" << endl;
+    //    else
+    //        cout << "Direction : NEUTRE" << endl;
 
-    if (new_direction != direction) emit directionChanged(new_direction);
-    direction = new_direction;
+    if (new_direction != direction) {
+        counterChangeDirection++;
+        if (counterChangeDirection > 5) {
+            emit directionChanged(new_direction);
+            counterChangeDirection = 0;
+            direction = new_direction;
+        }
+    }
 }
 
 void Webcam::resetInitFace() {
@@ -143,11 +148,12 @@ void Webcam::resetInitFace() {
     face = Rect(0, 0, 0, 0);
     face_center = Point(0, 0);
     isUpdated = false;
+    counterAbsurde = 0;
 }
 
 void Webcam::run() {
     // Init output window
-    //namedWindow("WebCam", 1);
+    // namedWindow("WebCam", 1);
 
     while (waitKey(5) < 0) {
         cap >> current_frame;
@@ -159,13 +165,13 @@ void Webcam::run() {
             getDirection();
         }
         // Display current_frame
-        Mat display_frame;
-        cv::flip(current_frame, display_frame, 1);
+        Mat* display_frame = new Mat(current_frame);
+        cv::flip(*display_frame, *display_frame, 1);
 
         if (true) {
-            //rectangle(display_frame, face, Scalar(0, 255, 0), 2);
-            //arrowedLine(display_frame, face_center, p, Scalar(255, 255, 255), 2);
-            emit webcamFrameCaptured(&display_frame);
+            rectangle(*display_frame, face, Scalar(0, 255, 0), 2);
+            arrowedLine(*display_frame, face_center, p, Scalar(255, 255, 255), 2);
+            emit webcamFrameCaptured(display_frame);
         }
 
         // imshow("WebCam", display_frame);

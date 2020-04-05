@@ -19,6 +19,7 @@ class Webcam : public QThread {
     void detectFace();
     void getDirection();
     void resetInitFace();
+    void needUpdate() { isUpdated = false; };
 
     enum Move { AVANT, ARRIERE, DROITE, GAUCHE, NEUTRE };
 
@@ -35,10 +36,11 @@ class Webcam : public QThread {
     cv::Mat init_frame, current_frame;
     cv::Point p, vect, face_center;
     Move direction;
+    int counterAbsurde = 0, counterChangeDirection = 0;
 
    signals:
     void webcamFrameCaptured(cv::Mat*);
-    void directionChanged(Move);
+    void directionChanged(Webcam::Move);
 };
 
 #endif  // WEBCAM_H

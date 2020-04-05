@@ -99,9 +99,9 @@ void GameWidget::paintGL() {
 void GameWidget::userMove() {
     // Calcul de la position de la caméra
     if (moveRight) {
-        angle_view_x -= 1;
+        angle_view_x -= 0.6;
     } else if (moveLeft) {
-        angle_view_x += 1;
+        angle_view_x += 0.6;
     }
 
     // Position du joueur
@@ -109,11 +109,11 @@ void GameWidget::userMove() {
     float new_y_position = y_position;
 
     if (moveForward) {
-        new_x_position += 0.2 * cos(angle_view_x * PI / 180);
-        new_y_position += 0.2 * sin(angle_view_x * PI / 180);
+        new_x_position += 0.1 * cos(angle_view_x * PI / 180);
+        new_y_position += 0.1 * sin(angle_view_x * PI / 180);
     } else if (moveBackward) {
-        new_x_position -= 0.2 * cos(angle_view_x * PI / 180);
-        new_y_position -= 0.2 * sin(angle_view_x * PI / 180);
+        new_x_position -= 0.1 * cos(angle_view_x * PI / 180);
+        new_y_position -= 0.1 * sin(angle_view_x * PI / 180);
     }
 
     // Detecte les collisions avec les murs
