@@ -35,16 +35,13 @@ class Webcam : public QObject{
       bool needWebcamInitialization = true;
       int counterConsecutivesAbsurdsDetections = 0;
       int consecutiveAbsurdsDetectionsLimit = 10;
-      int counterConsecutivesNull=0;
 
       //Setter
       void setDirection(std::string);
       void setneedWebcamInitializationState(bool);
-      void setCounterConsecutivesNull(int newCount);
     signals:
       void webcamFrameCaptured(cv::Mat*);
       void directionChanged(QString);
-      void needToPaint2DLabyrinthe(bool);
       void needWebcamInitializationStateChanged(bool);
     public slots:
       void capture();

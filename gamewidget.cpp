@@ -14,6 +14,8 @@ const unsigned int WIN_WIDTH = 1150;
 const unsigned int WIN_HEIGHT = 850;
 const float MAX_DIMENSION = 50.0f;
 const float PI = 3.14159265359;
+const int nbMSecAvantMap2D=3000;
+const int intervalTimer=10;
 
 // Constructeur
 GameWidget::GameWidget(QWidget* parent, int width, int height) : QGLWidget(parent) {
@@ -30,7 +32,7 @@ GameWidget::GameWidget(QWidget* parent, int width, int height) : QGLWidget(paren
       maze_width_ = width;
       maze_height_ = height;
 
-      m_AnimationTimer.setInterval(10);
+      m_AnimationTimer.setInterval(intervalTimer);
       m_AnimationTimer.start();
 }
 
@@ -75,6 +77,18 @@ void GameWidget::paintGL() {
 
       userMove();
 
+      if(!isMoving){
+            counterConsecutiveNoMovement+=1;
+            if(counterConsecutiveNoMovement*intervalTimer>=nbMSecAvantMap2D){
+                isNeededToPaint2DLabyrinthe=true;
+            }
+            else{
+                isNeededToPaint2DLabyrinthe=false;
+            }
+      }
+      else{
+          isNeededToPaint2DLabyrinthe=false;
+      }
 
 
 
@@ -264,19 +278,25 @@ void GameWidget::updateDirection(QString Qdirection)
      moveBackward=false;
     if(direction=="droite" ) {
           moveRight = true;
+          isMoving=true;
+          counterConsecutiveNoMovement=0;
     }
     else if(direction=="gauche") {
           moveLeft = true;
+          isMoving=true;
+          counterConsecutiveNoMovement=0;
     }
     else if(direction=="haut") {
           moveForward = true;
+          isMoving=true;
+          counterConsecutiveNoMovement=0;
     }
     else if(direction=="bas") {
           moveBackward = true;
+          isMoving=true;
+          counterConsecutiveNoMovement=0;
     }
-}
-
-void GameWidget::updateNeedToPaint2DLabyrinthe(bool newNeedToPaint2DLabyrintheState)
-{
-    isNeededToPaint2DLabyrinthe=newNeedToPaint2DLabyrintheState;
+    else if(direction=="null"){
+        isMoving=false;
+    }
 }

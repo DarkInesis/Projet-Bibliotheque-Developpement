@@ -15,8 +15,6 @@ Window::Window(QWidget *parent) : QWidget(parent), ui(new Ui::Window) {
       connect(myWebCam,SIGNAL(needWebcamInitializationStateChanged(bool)),this,SLOT(updateStateInitialisationButton(bool)));
       // Connection permettant de mettre a jour la direction dans l'openGLWidget
       connect(myWebCam,SIGNAL(directionChanged(QString)),ui->frameJeu,SLOT(updateDirection(QString)));
-      // Connection permettant de mettre a jour le booleen indiquant si on doit dessiner le labyrinthe en 2D
-      connect(myWebCam,SIGNAL(needToPaint2DLabyrinthe(bool)),ui->frameJeu,SLOT(updateNeedToPaint2DLabyrinthe(bool)));
       // Connection entre le thread et myWebCam
       connect(&threadWebcam,SIGNAL(signalWebcamToCapture()),myWebCam,SLOT(capture()));
       connect(myWebCam,SIGNAL(webcamFrameCaptured(cv::Mat*)),this,SLOT(update(cv::Mat*)));
