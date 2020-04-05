@@ -94,19 +94,14 @@ void Webcam::captureOrientation() {
                                    templateHeight);
                   if (vect.x > motionDetect_minLimit_horizontal) {
                         setDirection("droite");
-                        setCounterConsecutivesNull(0);
                   } else if (vect.x < -motionDetect_minLimit_horizontal) {
                         setDirection("gauche");
-                        setCounterConsecutivesNull(0);
                   } else if (vect.y > motionDetect_minLimit_vertical) {
                         setDirection("bas");
-                        setCounterConsecutivesNull(0);
                   } else if (vect.y < -motionDetect_minLimit_vertical) {
                         setDirection("haut");
-                        setCounterConsecutivesNull(0);
                   } else {
                         setDirection("null");
-                        setCounterConsecutivesNull(counterConsecutivesNull+1);
                         // Redefinition du model ( à revoir)
                         this->modelFace = Mat(frame_gray, MatchedZone);
                   }
@@ -186,17 +181,5 @@ void Webcam::setneedWebcamInitializationState(bool newState){
     if(this->needWebcamInitialization != newState){
         needWebcamInitialization=newState;
         emit needWebcamInitializationStateChanged(newState);
-    }
-}
-void Webcam::setCounterConsecutivesNull(int newCount){
-    if(this->counterConsecutivesNull != newCount){
-        counterConsecutivesNull=newCount;
-        if (counterConsecutivesNull>=5)
-        {
-            emit needToPaint2DLabyrinthe(true);
-        }
-        else{
-            emit needToPaint2DLabyrinthe(false);
-        }
     }
 }
