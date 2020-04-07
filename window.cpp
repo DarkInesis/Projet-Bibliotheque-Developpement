@@ -17,8 +17,12 @@ Window::Window(QWidget *parent) : QWidget(parent), ui(new Ui::Window) {
 
     // Connection entre le thread et myWebCam
     connect(myWebCam, SIGNAL(webcamFrameCaptured(cv::Mat *)), this, SLOT(update(cv::Mat *)));
-
     myWebCam->start();
+
+    // Connections liéés à la fin du jeu
+    connect(ui->restart_button_2,SIGNAL(clicked()),ui->frameJeu,SLOT(restartGame()));
+    connect(ui->frameJeu,SIGNAL(gameFinished(int)), this,SLOT(enableMenu(int)));
+    ui->menu->setHidden(true);
 }
 void Window::update(cv::Mat *frame) {
     cv::resize((*frame), (*frame), Size(340, 255), 0, 0, INTER_LINEAR);
@@ -43,4 +47,16 @@ void Window::updateStateInitialisationButton(bool needWebcamInitialization) {
 void Window::on_buttonInitWebCam_clicked() {
     myWebCam->needUpdate();
     ;
+}
+
+void Window::on_restart_button_2_clicked()
+{
+    ui->menu->setHidden(true);
+}
+
+void Window::enableMenu(int time)
+{
+    cout<<to_string(time)<<endl;
+    ui->timeLabel_2->setText(QString(time));
+    ui->menu->setHidden(false);
 }

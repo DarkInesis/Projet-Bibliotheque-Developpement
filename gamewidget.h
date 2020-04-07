@@ -15,6 +15,8 @@ class GameWidget : public QGLWidget {
     Q_OBJECT
 
    public:
+    // Booléen qui indique si le joueur peut bouger (est à faux lorsqu'il a gagné)
+    bool canMove=true;
     // Booléen qui indique si il faut dessiner ou non le labyrinthe 2D
     bool isNeededToPaint2DLabyrinthe = true;
 
@@ -55,8 +57,11 @@ class GameWidget : public QGLWidget {
     float m_TimeElapsed{0.0f};
     QTimer m_AnimationTimer;
     Ball *ball;
+signals :
+    void gameFinished(int time);
    private slots:
     void updateDirection(Webcam::Move);
+    void restartGame();
 };
 
 #endif  // GAMEWIDGET_H

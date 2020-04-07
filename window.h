@@ -5,7 +5,6 @@
 #include <iostream>
 #include "webcam.h"
 #include "gamewidget.h"
-
 namespace Ui {
 class Window;
 }
@@ -23,12 +22,16 @@ class Window : public QWidget {
     class UserControl* userControler;
     Webcam* myWebCam;
     bool isWebcamNeedsInitialization;
-    // ThreadWebcam threadWebcam;
 
+    // ThreadWebcam threadWebcam;
+  signals:
+    void restart();
    private slots:
     void update(cv::Mat*);
     void on_buttonInitWebCam_clicked();
     void updateStateInitialisationButton(bool);
+    void on_restart_button_2_clicked();
+    void enableMenu(int);
 };
 
 #endif  // WINDOW_H

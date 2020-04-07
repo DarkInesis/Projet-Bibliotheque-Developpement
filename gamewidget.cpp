@@ -69,8 +69,9 @@ void GameWidget::paintGL() {
     // Reinitialisation des tampons
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
-
-    userMove();
+    if(canMove){
+        userMove();
+    }
 
     // Definition de la position de la camera
     gluLookAt(x_position, y_position, z_position, x_position + cos(angle_view_x * PI / 180),
@@ -239,8 +240,8 @@ void GameWidget::checkBallFound() {
 void GameWidget::checkUserWin() {
     if (x_position < SZ / 4 || x_position > coeff_move * labyrinthe->maze.width_ ||
         y_position > -SZ / 4 || y_position < -coeff_move * labyrinthe->maze.height_) {
-        std::cout << "YOU WIN" << endl;
-        this->close();
+        canMove=false;
+        emit gameFinished(50);
     }
 }
 
@@ -259,4 +260,16 @@ void GameWidget::updateDirection(Webcam::Move d) {
     } else if (d == Webcam::ARRIERE) {
         moveBackward = true;
     }
+}
+
+void GameWidget::restartGame()
+{
+    canMove=true;
+    // Réinitialisation du point de départ
+    x_position = SZ / 2;
+    y_position = -SZ / 2;
+    angle_view_x = -90;
+
+    // Load new labyrinthe
+    initializeGL();
 }
