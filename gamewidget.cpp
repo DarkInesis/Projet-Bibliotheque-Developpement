@@ -15,8 +15,23 @@ const unsigned int WIN_HEIGHT = 850;
 const float MAX_DIMENSION = 50.0f;
 const float PI = 3.14159265359;
 
+// Convert time in millisecond to mm::ss::mm
+QString timeToString(int time) {
+    int m = time / 60000;
+    QString min = QString("%1").arg(m, 2, 10, QChar('0'));
+    time = time - 60000 * m;
+
+    int s = time / 1000;
+    QString sec = QString("%1").arg(s, 2, 10, QChar('0'));
+    time = time - 1000 * s;
+
+    QString msec = QString("%1").arg(time / 10, 2, 10, QChar('0'));
+
+    return min + ":" + sec + ":" + msec;
+}
+
 // Constructeur
-GameWidget::GameWidget(QWidget* parent, int width, int height) : QGLWidget(parent) {
+GameWidget::GameWidget(QWidget *parent, int width, int height) : QGLWidget(parent) {
     // Reglage de la taille/position
     setFixedSize(WIN_WIDTH, WIN_HEIGHT);
     move(QApplication::desktop()->screen()->rect().center() - rect().center());
@@ -87,11 +102,49 @@ void GameWidget::paintGL() {
     labyrinthe->Display();
     if (!ball_found) ball->Display();
 
-    // 2D Part
+    //** Ajout du chronomètre en haut à droite **//
+    long int currentTime = chrono.elapsed();
+    cout << "Current time : " << currentTime << " lastTime : " << lastTimeMove << endl;
 
-    float x = x_position / (labyrinthe->maze.width_ * coeff_move + SZ / 4);
-    float y = -y_position / (labyrinthe->maze.height_ * coeff_move + SZ / 4);
-    labyrinthe->Show2DMap(WIN_WIDTH, WIN_HEIGHT, x, y, angle_view_x);
+    glColor3f(1.0, 1.0, 1.0);
+    QFont serifFont("Consolas", 20, QFont::Light);
+    if (game_started)
+        QGLWidget::renderText(WIN_WIDTH - 200, 100, timeToString(currentTime), serifFont);
+    else
+        QGLWidget::renderText(WIN_WIDTH - 200, 100, "00:00:00", serifFont);
+
+    // Si on s'est déplacé la dernière fois il y a plus de 3 secondes
+    if (currentTime - lastTimeMove >= 3000) {
+        //*** 2D Part ***//
+        // Set the 2D environment
+        glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
+        glLoadIdentity();
+
+        //** Ajout de la carte du labyrinthe **//
+        // Calcul pour avoir les bonnes proportions du repère ortho2D vu que le widget n'est pas
+        // carré
+        float proportions = float(WIN_WIDTH) / WIN_HEIGHT;
+        // On multiplie par 4 pour que la largueur du labyrinthe fasse 1/4 de la largueur du widget
+        // On fait -1 pour avoir une marge de 1 entre le plan et le bord du widget
+        gluOrtho2D(-1, (4 * labyrinthe->maze.width_ - 1),
+                   (4 * labyrinthe->maze.height_ - 1) * proportions, -1);
+
+        // On calcule x et y en "pourcentage de position" dans le labyrinthe
+        float x = x_position / (labyrinthe->maze.width_ * coeff_move + SZ / 4);
+        float y = -y_position / (labyrinthe->maze.height_ * coeff_move + SZ / 4);
+
+        labyrinthe->Show2DMap(x, y, angle_view_x);
+
+        // Fin du dessin, réinitialisation des matrices
+        glEnable(GL_LIGHTING);
+        glEnable(GL_DEPTH_TEST);
+        glMatrixMode(GL_PROJECTION);
+        glPopMatrix();
+        glMatrixMode(GL_MODELVIEW);
+        glPopMatrix();
+        //** End 2D **//
+    }
 }
 
 void GameWidget::userMove() {
@@ -112,6 +165,21 @@ void GameWidget::userMove() {
     } else if (moveBackward) {
         new_x_position -= 0.1 * cos(angle_view_x * PI / 180);
         new_y_position -= 0.1 * sin(angle_view_x * PI / 180);
+    }
+
+    if (moveForward || moveBackward) {
+        if (head_move) {
+            z_position += 0.015;
+            if (z_position >= 7.2) head_move = false;
+        } else {
+            z_position -= 0.02;
+            if (z_position <= 6.8) head_move = true;
+        }
+        if (!game_started) {
+            chrono.start();
+            game_started = true;
+        }
+        lastTimeMove = chrono.elapsed();
     }
 
     // Detecte les collisions avec les murs
@@ -229,8 +297,8 @@ void GameWidget::checkBallFound() {
     float ball_x, ball_y;
     tie(ball_x, ball_y) = ball->getBallPosition();
 
-    if (x_position < ball_x + 1.5 && x_position > ball_x - 1.5)
-        if (y_position < ball_y + 1.5 && y_position > ball_y - 1.5) {
+    if (x_position < ball_x + 2 && x_position > ball_x - 2)
+        if (y_position < ball_y + 2 && y_position > ball_y - 2) {
             ball_found = true;
             labyrinthe->OpenExit();
         }
@@ -242,6 +310,20 @@ void GameWidget::checkUserWin() {
         std::cout << "YOU WIN" << endl;
         this->close();
     }
+}
+
+void GameWidget::keyPressEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Up) moveForward = true;
+    if (event->key() == Qt::Key_Down) moveBackward = true;
+    if (event->key() == Qt::Key_Left) moveLeft = true;
+    if (event->key() == Qt::Key_Right) moveRight = true;
+}
+
+void GameWidget::keyReleaseEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Up) moveForward = false;
+    if (event->key() == Qt::Key_Down) moveBackward = false;
+    if (event->key() == Qt::Key_Left) moveLeft = false;
+    if (event->key() == Qt::Key_Right) moveRight = false;
 }
 
 // Slots

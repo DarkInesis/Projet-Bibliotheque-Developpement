@@ -9,6 +9,7 @@
 #include <QWheelEvent>
 #include <QKeyEvent>
 #include <QTimer>
+#include <QElapsedTimer>
 
 // Classe dediee a l'affichage d'une scene OpenGL
 class GameWidget : public QGLWidget {
@@ -28,6 +29,7 @@ class GameWidget : public QGLWidget {
     float y_position = -SZ / 2;
     float z_position = 7;
     float angle_view_x = -90;
+    bool head_move = true;
 
     Labyrinthe *labyrinthe;
     int maze_width_, maze_height_;
@@ -50,10 +52,17 @@ class GameWidget : public QGLWidget {
     void checkBallFound();
     void checkUserWin();
 
+   protected:
+    void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
+
    private:
     // Timer d'animation
     float m_TimeElapsed{0.0f};
     QTimer m_AnimationTimer;
+    bool game_started = false;
+    QElapsedTimer chrono;
+    int lastTimeMove = 3000;
     Ball *ball;
    private slots:
     void updateDirection(Webcam::Move);

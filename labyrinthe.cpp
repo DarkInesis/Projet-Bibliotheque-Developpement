@@ -79,9 +79,9 @@ void Labyrinthe::Display() const {
 
     // Dessin du plafond
     glVertex3f(0, 0, 0.6 * SZ);
-    glVertex3f(coeff_move * maze.width_, 0, 0.6 * SZ);
-    glVertex3f(coeff_move * maze.width_, -coeff_move * maze.height_, 0.6 * SZ);
-    glVertex3f(0, -coeff_move * maze.height_, 0.6 * SZ);
+    glVertex3f(coeff_move * maze.width_ + SZ / 4, 0, 0.6 * SZ);
+    glVertex3f(coeff_move * maze.width_ + SZ / 4, -coeff_move * maze.height_ - SZ / 4, 0.6 * SZ);
+    glVertex3f(0, -coeff_move * maze.height_ - SZ / 4, 0.6 * SZ);
 
     glEnd();
 
@@ -217,20 +217,10 @@ void Labyrinthe::ShowExitLighting() const {
     glPopMatrix();
 }
 
-void Labyrinthe::Show2DMap(int WIN_WIDTH, int WIN_HEIGHT, float x_position, float y_position,
-                           float angle) const {
+void Labyrinthe::Show2DMap(float x_position, float y_position, float angle) const {
     // Useful variables
     int width = maze.width_;
     int height = maze.height_;
-
-    // Set the 2D environment
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    // Calcul pour avoir les bonnes proportions du labyrinthe vu que le widget n'est pas carré
-    float proportions = float(WIN_HEIGHT) / WIN_WIDTH;
-    float size = 4;
-    gluOrtho2D(-1, (size * width - 1) * proportions, (size * height - 1), -1);
 
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
@@ -299,12 +289,4 @@ void Labyrinthe::Show2DMap(int WIN_WIDTH, int WIN_HEIGHT, float x_position, floa
     glPopMatrix();
 
     // Dessin de la sphère lumineuse
-
-    // Fin du dessin, réinitialisation des matrices
-    glEnable(GL_LIGHTING);
-    glEnable(GL_DEPTH_TEST);
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-    glMatrixMode(GL_MODELVIEW);
-    glPopMatrix();
 }

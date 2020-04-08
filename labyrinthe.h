@@ -42,7 +42,7 @@ class Labyrinthe {
     void Display() const;
     void ShowBall() const;
     void ShowExitLighting() const;
-    void Show2DMap(int, int, float, float, float) const;
+    void Show2DMap(float, float, float) const;
     void OpenExit() { maze.grid_[i_exit][j_exit].setFrontier(d_exit, false); };
 
     // Getters
