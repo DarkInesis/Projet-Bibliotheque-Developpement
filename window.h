@@ -31,7 +31,7 @@ class Window : public QWidget {
     void on_buttonInitWebCam_clicked();
     void updateStateInitialisationButton(bool);
     void on_restart_button_2_clicked();
-    void enableMenu(int);
+    void enableMenu(QString);
 };
 
 #endif  // WINDOW_H

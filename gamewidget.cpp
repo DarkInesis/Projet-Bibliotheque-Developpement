@@ -51,6 +51,7 @@ GameWidget::GameWidget(QWidget *parent, int width, int height) : QGLWidget(paren
 
 // Fonction d'initialisation
 void GameWidget::initializeGL() {
+
     // Reglage de la couleur de fond
     glClearColor(0.9, 0.9, 0.9, 1.0);
 
@@ -84,7 +85,7 @@ void GameWidget::paintGL() {
     // Reinitialisation des tampons
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
-    if(canMove){
+    if (canMove) {
         userMove();
     }
 
@@ -105,16 +106,14 @@ void GameWidget::paintGL() {
 
     //** Ajout du chronomètre en haut à droite **//
     long int currentTime = chrono.elapsed();
-    cout << "Current time : " << currentTime << " lastTime : " << lastTimeMove << endl;
-
     glColor3f(1.0, 1.0, 1.0);
     QFont serifFont("Consolas", 20, QFont::Light);
     if (game_started)
         QGLWidget::renderText(WIN_WIDTH - 200, 100, timeToString(currentTime), serifFont);
     else
-        QGLWidget::renderText(WIN_WIDTH - 200, 100, "00:00:00", serifFont);
+        QGLWidget::renderText(WIN_WIDTH - 200, 100, timeToString(timeWin), serifFont);
 
-    // Si on s'est déplacé la dernière fois il y a plus de 3 secondes
+    // Si on s'est déplacé la dernière fois il y a plus de 3 secondes, on affiche la carte
     if (currentTime - lastTimeMove >= 3000) {
         //*** 2D Part ***//
         // Set the 2D environment
@@ -308,8 +307,11 @@ void GameWidget::checkBallFound() {
 void GameWidget::checkUserWin() {
     if (x_position < SZ / 4 || x_position > coeff_move * labyrinthe->maze.width_ ||
         y_position > -SZ / 4 || y_position < -coeff_move * labyrinthe->maze.height_) {
-        canMove=false;
-        emit gameFinished(50);
+        canMove = false;
+        game_started = false;
+        ball_found = false;
+        timeWin = chrono.elapsed();
+        emit gameFinished(timeToString(timeWin));
     }
 }
 
@@ -344,9 +346,9 @@ void GameWidget::updateDirection(Webcam::Move d) {
     }
 }
 
-void GameWidget::restartGame()
-{
-    canMove=true;
+void GameWidget::restartGame() {
+    canMove = true;
+    timeWin = 0;
     // Réinitialisation du point de départ
     x_position = SZ / 2;
     y_position = -SZ / 2;
@@ -354,4 +356,5 @@ void GameWidget::restartGame()
 
     // Load new labyrinthe
     initializeGL();
+    m_AnimationTimer.start();
 }

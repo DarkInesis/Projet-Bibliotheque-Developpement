@@ -20,10 +20,11 @@ Window::Window(QWidget *parent) : QWidget(parent), ui(new Ui::Window) {
     myWebCam->start();
 
     // Connections liéés à la fin du jeu
-    connect(ui->restart_button_2,SIGNAL(clicked()),ui->frameJeu,SLOT(restartGame()));
-    connect(ui->frameJeu,SIGNAL(gameFinished(int)), this,SLOT(enableMenu(int)));
+    connect(ui->restart_button_2, SIGNAL(clicked()), ui->frameJeu, SLOT(restartGame()));
+    connect(ui->frameJeu, SIGNAL(gameFinished(QString)), this, SLOT(enableMenu(QString)));
     ui->menu->setHidden(true);
 }
+
 void Window::update(cv::Mat *frame) {
     cv::resize((*frame), (*frame), Size(340, 255), 0, 0, INTER_LINEAR);
     cv::cvtColor((*frame), (*frame), COLOR_BGR2RGB);  // Qt reads in RGB whereas CV in BGR
@@ -44,19 +45,11 @@ void Window::updateStateInitialisationButton(bool needWebcamInitialization) {
     }
 }
 
-void Window::on_buttonInitWebCam_clicked() {
-    myWebCam->needUpdate();
-    ;
-}
+void Window::on_buttonInitWebCam_clicked() { myWebCam->needUpdate(); }
 
-void Window::on_restart_button_2_clicked()
-{
-    ui->menu->setHidden(true);
-}
+void Window::on_restart_button_2_clicked() { ui->menu->setHidden(true); }
 
-void Window::enableMenu(int time)
-{
-    cout<<to_string(time)<<endl;
-    ui->timeLabel_2->setText(QString(time));
+void Window::enableMenu(QString time) {
+    ui->timeLabel_2->setText(time);
     ui->menu->setHidden(false);
 }

@@ -65,9 +65,10 @@ class GameWidget : public QGLWidget {
     bool game_started = false;
     QElapsedTimer chrono;
     int lastTimeMove = 3000;
+    int timeWin = 0;
     Ball *ball;
 signals :
-    void gameFinished(int time);
+    void gameFinished(QString);
    private slots:
     void updateDirection(Webcam::Move);
     void restartGame();
