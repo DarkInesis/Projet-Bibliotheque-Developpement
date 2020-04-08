@@ -311,6 +311,7 @@ void GameWidget::checkUserWin() {
         game_started = false;
         ball_found = false;
         timeWin = chrono.elapsed();
+        lastTimeMove = 3000;
         emit gameFinished(timeToString(timeWin));
     }
 }
@@ -352,7 +353,7 @@ void GameWidget::restartGame() {
     // Réinitialisation du point de départ
     x_position = SZ / 2;
     y_position = -SZ / 2;
-    angle_view_x = -90;
+    angle_view_x = 0;
 
     // Load new labyrinthe
     initializeGL();

@@ -27,7 +27,7 @@ class GameWidget : public QGLWidget {
     float x_position = SZ / 2;
     float y_position = -SZ / 2;
     float z_position = 7;
-    float angle_view_x = -90;
+    float angle_view_x = 0;
     bool head_move = true;
 
     Labyrinthe *labyrinthe;
