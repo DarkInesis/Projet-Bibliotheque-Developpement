@@ -6,25 +6,26 @@ using namespace std;
 using namespace cv;
 
 Window::Window(QWidget *parent) : QWidget(parent), ui(new Ui::Window) {
-      ui->setupUi(this);
-      this->myWebCam=new Webcam();
-      // Initialisation des composants servant à demander l'initialisation de la webcam
-      isWebcamNeedsInitialization=true;
+    ui->setupUi(this);
+    this->myWebCam = new Webcam();
 
-      // Connection permettant de mettre a jour l'etat du bouton lors d'un changement d'etat de la webcam
-      connect(myWebCam,SIGNAL(needWebcamInitializationStateChanged(bool)),this,SLOT(updateStateInitialisationButton(bool)));
-      // Connection permettant de mettre a jour la direction dans l'openGLWidget
-      connect(myWebCam,SIGNAL(directionChanged(QString)),ui->frameJeu,SLOT(updateDirection(QString)));
-      // Connection entre le thread et myWebCam
-      connect(&threadWebcam,SIGNAL(signalWebcamToCapture()),myWebCam,SLOT(capture()));
-      connect(myWebCam,SIGNAL(webcamFrameCaptured(cv::Mat*)),this,SLOT(update(cv::Mat*)));
-      myWebCam->moveToThread(&threadWebcam);
+    qRegisterMetaType<Webcam::Move>("Webcam::Move");
 
+    // Connection permettant de mettre a jour la direction dans l'openGLWidget
+    connect(myWebCam, SIGNAL(directionChanged(Webcam::Move)), ui->frameJeu,
+            SLOT(updateDirection(Webcam::Move)));
 
-      threadWebcam.start();
+    // Connection entre le thread et myWebCam
+    connect(myWebCam, SIGNAL(webcamFrameCaptured(cv::Mat *)), this, SLOT(update(cv::Mat *)));
+    myWebCam->start();
 
+    // Connections liéés à la fin du jeu
+    connect(ui->restart_button_2, SIGNAL(clicked()), ui->frameJeu, SLOT(restartGame()));
+    connect(ui->frameJeu, SIGNAL(gameFinished(QString)), this, SLOT(enableMenu(QString)));
+    ui->menu->setHidden(true);
 }
-void Window::update(cv::Mat* frame) {
+
+void Window::update(cv::Mat *frame) {
     cv::resize((*frame), (*frame), Size(340, 255), 0, 0, INTER_LINEAR);
     cv::cvtColor((*frame), (*frame), COLOR_BGR2RGB);  // Qt reads in RGB whereas CV in BGR
     QImage imdisplay((uchar *)(*frame).data, (*frame).cols, (*frame).rows, (*frame).step,
@@ -36,16 +37,19 @@ void Window::update(cv::Mat* frame) {
 
 Window::~Window() { delete ui; }
 
-void Window::updateStateInitialisationButton(bool needWebcamInitialization)
-{
+void Window::updateStateInitialisationButton(bool needWebcamInitialization) {
     if (needWebcamInitialization) {
-          ui->buttonInitWebCam->setEnabled(true);
+        ui->buttonInitWebCam->setEnabled(true);
     } else {
-          ui->buttonInitWebCam->setEnabled(false);
+        ui->buttonInitWebCam->setEnabled(false);
     }
 }
 
-void Window::on_buttonInitWebCam_clicked()
-{
-    myWebCam->resetAbsurdsDetectionStates();
+void Window::on_buttonInitWebCam_clicked() { myWebCam->needUpdate(); }
+
+void Window::on_restart_button_2_clicked() { ui->menu->setHidden(true); }
+
+void Window::enableMenu(QString time) {
+    ui->timeLabel_2->setText(time);
+    ui->menu->setHidden(false);
 }

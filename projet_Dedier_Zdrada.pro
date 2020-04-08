@@ -30,7 +30,6 @@ SOURCES += \
     labyrinthe.cpp \
     main.cpp \
     maze.cpp \
-    threadwebcam.cpp \
     webcam.cpp \
     window.cpp
 
@@ -57,7 +56,6 @@ HEADERS += \
     gamewidget.h \
     labyrinthe.h \
     maze.h \
-    threadwebcam.h \
     webcam.h \
     window.h
 
@@ -72,7 +70,4 @@ DISTFILES += \
     resources/haarcascade_frontalcatface.xml \
     resources/haarcascade_frontalcatface_extended.xml \
     resources/haarcascade_frontalface_alt.xml \
-    resources/haarcascade_frontalface_alt2.xml \
-    resources/haarcascade_frontalface_alt_tree.xml \
-    resources/haarcascade_frontalface_default.xml \
     resources/logo_tse.png

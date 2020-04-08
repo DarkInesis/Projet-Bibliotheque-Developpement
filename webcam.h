@@ -6,46 +6,41 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/objdetect.hpp>
 #include <QObject>
+#include <QThread>
 #include <cstdio>
 #include <iostream>
 
-class Webcam : public QObject{
+class Webcam : public QThread {
     Q_OBJECT
-     public:
-      Webcam(QWidget *parent = nullptr);
-      cv::Mat captureMotion();
-      void initModel();
-      void captureOrientation();
-      void resetAbsurdsDetectionStates();
-     private:
-      cv::VideoCapture cap;
-      cv::CascadeClassifier face_cascade;
-      cv::Mat frame;
-      cv::Mat oldFrame;
-      cv::Mat oldFrame_gray;
-      cv::Mat modelFace;
-      cv::Mat firstModel;
-      cv::Rect templateRect;
 
-      int frameWidth;
-      int frameHeight;
-      int templateWidth;
-      int templateHeight;
-      std::string direction="null";
-      bool needWebcamInitialization = true;
-      int counterConsecutivesAbsurdsDetections = 0;
-      int consecutiveAbsurdsDetectionsLimit = 10;
+   public:
+    Webcam();
+    void detectMotion();
+    void detectFace();
+    void getDirection();
+    void resetInitFace();
+    void needUpdate() { isUpdated = false; };
 
-      //Setter
-      void setDirection(std::string);
-      void setneedWebcamInitializationState(bool);
-    signals:
-      void webcamFrameCaptured(cv::Mat*);
-      void directionChanged(QString);
-      void needWebcamInitializationStateChanged(bool);
-    public slots:
-      void capture();
+    enum Move { AVANT, ARRIERE, DROITE, GAUCHE, NEUTRE };
 
+   protected:
+    void run() override;
+
+   private:
+    bool isUpdated = false;
+    cv::CascadeClassifier face_cascade;
+    int frameWidth = 640;
+    int frameHeight = 480;
+    cv::VideoCapture cap;
+    cv::Rect face;
+    cv::Mat init_frame, current_frame;
+    cv::Point p, vect, face_center;
+    Move direction;
+    int counterAbsurde = 0, counterChangeDirection = 0;
+
+   signals:
+    void webcamFrameCaptured(cv::Mat*);
+    void directionChanged(Webcam::Move);
 };
 
 #endif  // WEBCAM_H

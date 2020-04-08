@@ -5,32 +5,33 @@
 #include <iostream>
 #include "webcam.h"
 #include "gamewidget.h"
-#include "threadwebcam.h"
 namespace Ui {
 class Window;
 }
 
 class Window : public QWidget {
-      Q_OBJECT
+    Q_OBJECT
 
-     public:
-      explicit Window(QWidget* parent = nullptr);
-      ~Window();
+   public:
+    explicit Window(QWidget* parent = nullptr);
+    ~Window();
 
+   private:
+    Ui::Window* ui;
+    GameWidget* gameWidget;
+    class UserControl* userControler;
+    Webcam* myWebCam;
+    bool isWebcamNeedsInitialization;
 
-     private:
-      Ui::Window* ui;
-     GameWidget* gameWidget;
-     class UserControl* userControler;
-     Webcam* myWebCam;
-     bool isWebcamNeedsInitialization;
-
-     ThreadWebcam threadWebcam;
-     private slots:
-      void update(cv::Mat*);
-      void on_buttonInitWebCam_clicked();
-      void updateStateInitialisationButton(bool);
-
+    // ThreadWebcam threadWebcam;
+  signals:
+    void restart();
+   private slots:
+    void update(cv::Mat*);
+    void on_buttonInitWebCam_clicked();
+    void updateStateInitialisationButton(bool);
+    void on_restart_button_2_clicked();
+    void enableMenu(QString);
 };
 
 #endif  // WINDOW_H
