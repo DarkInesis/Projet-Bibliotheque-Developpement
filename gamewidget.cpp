@@ -359,3 +359,19 @@ void GameWidget::restartGame() {
     initializeGL();
     m_AnimationTimer.start();
 }
+
+void GameWidget::updateSize(int index)
+{
+    // Cas ou le joueur selectionne une taille de labyrinthe
+    if (index!=0)
+    {
+        maze_width_=labyrintheSizeOptions[index-1];
+       maze_height_=labyrintheSizeOptions[index-1];
+       // si la partie n'est pas terminée, on relance le jeu avec la nouvelle taille
+       if(canMove){
+           game_started=false;
+           restartGame();
+       }
+    }
+
+}
