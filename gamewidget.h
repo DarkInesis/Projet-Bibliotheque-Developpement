@@ -64,11 +64,13 @@ class GameWidget : public QGLWidget {
     int lastTimeMove = 3000;
     int timeWin = 0;
     Ball *ball;
+    int labyrintheSizeOptions[6] = {5,10,15};
    signals:
     void gameFinished(QString);
    private slots:
     void updateDirection(Webcam::Move);
     void restartGame();
+    void updateSize(int);
 };
 
 #endif  // GAMEWIDGET_H
