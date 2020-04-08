@@ -122,13 +122,8 @@ void GameWidget::paintGL() {
         glLoadIdentity();
 
         //** Ajout de la carte du labyrinthe **//
-        // Calcul pour avoir les bonnes proportions du repère ortho2D vu que le widget n'est pas
-        // carré
-        float proportions = float(WIN_WIDTH) / WIN_HEIGHT;
-        // On multiplie par 4 pour que la largueur du labyrinthe fasse 1/4 de la largueur du widget
         // On fait -1 pour avoir une marge de 1 entre le plan et le bord du widget
-        gluOrtho2D(-1, (4 * labyrinthe->maze.width_ - 1),
-                   (4 * labyrinthe->maze.height_ - 1) * proportions, -1);
+        gluOrtho2D(-1, WIN_WIDTH / 30 - 1, WIN_HEIGHT / 30 - 1, -1);
 
         // On calcule x et y en "pourcentage de position" dans le labyrinthe
         float x = x_position / (labyrinthe->maze.width_ * coeff_move + SZ / 4);
@@ -360,18 +355,15 @@ void GameWidget::restartGame() {
     m_AnimationTimer.start();
 }
 
-void GameWidget::updateSize(int index)
-{
+void GameWidget::updateSize(int index) {
     // Cas ou le joueur selectionne une taille de labyrinthe
-    if (index!=0)
-    {
-        maze_width_=labyrintheSizeOptions[index-1];
-       maze_height_=labyrintheSizeOptions[index-1];
-       // si la partie n'est pas terminée, on relance le jeu avec la nouvelle taille
-       if(canMove){
-           game_started=false;
-           restartGame();
-       }
+    if (index != 0) {
+        maze_width_ = labyrintheSizeOptions[index - 1];
+        maze_height_ = labyrintheSizeOptions[index - 1];
+        // si la partie n'est pas terminée, on relance le jeu avec la nouvelle taille
+        if (canMove) {
+            game_started = false;
+            restartGame();
+        }
     }
-
 }

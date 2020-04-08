@@ -271,20 +271,20 @@ void Labyrinthe::Show2DMap(float x_position, float y_position, float angle) cons
     glPushMatrix();
     // Dessin du symbole de la position du joueur
     glTranslatef(x_position * width, y_position * height, 0);
-    glRotatef(-angle + 90, 0, 0, 1);
+    glRotatef(90 - angle, 0, 0, 1);
 
-    glColor3ub(130, 150, 190);
+    glColor3ub(100, 120, 170);
     glBegin(GL_TRIANGLES);
-    glVertex2f(0.0, 0.1);
-    glVertex2f(0.0, -0.4);
-    glVertex2f(-0.35, 0.4);
+    glVertex2f(0.0, 0.2);
+    glVertex2f(0.0, -0.35);
+    glVertex2f(-0.35, 0.35);
     glEnd();
 
-    glColor3ub(100, 100, 130);
+    glColor3ub(80, 80, 110);
     glBegin(GL_TRIANGLES);
-    glVertex2f(0.0, 0.1);
-    glVertex2f(0.0, -0.4);
-    glVertex2f(0.35, 0.4);
+    glVertex2f(0.0, 0.2);
+    glVertex2f(0.0, -0.35);
+    glVertex2f(0.35, 0.35);
     glEnd();
     glPopMatrix();
 
