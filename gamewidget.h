@@ -29,7 +29,7 @@ class GameWidget : public QGLWidget {
     float z_position = 7;
     float angle_view_x = 0;
     bool head_move = true;
-
+    // Labyrinthe et ses variables de construction.
     Labyrinthe *labyrinthe;
     int maze_width_, maze_height_;
 
@@ -45,31 +45,40 @@ class GameWidget : public QGLWidget {
 
     // Fonction d'affichage
     void paintGL();
-
+    // Methode qui manage le mouvement du joueur (calcul de la nouvelle position/test si collision/test si la balle est attrapée/...)
     void userMove();
+    // On teste si le mouvement est possible ( les deux arguments correspondent aux futures coordonnées du joueur)
+    // Si il n'y a pas de collision, on applique le mouvement.
     void detectCollision(float, float);
+    // TODO
     void checkBallFound();
+    // Verifie si le joueur a gagné la partie à la suite de son mouvement. Emet le signal GameFinished si c'est le cas.
     void checkUserWin();
-
-   protected:
-    void keyPressEvent(QKeyEvent *event);
-    void keyReleaseEvent(QKeyEvent *event);
 
    private:
     // Timer d'animation
     float m_TimeElapsed{0.0f};
     QTimer m_AnimationTimer;
+    // Variables de gestion du temps
     bool game_started = false;
     QElapsedTimer chrono;
     int lastTimeMove = 3000;
     int timeWin = 0;
+    // Pointeur vers la Ball (objectif à récuperer)
     Ball *ball;
-    int labyrintheSizeOptions[6] = {5,10,15};
+    // Tableau contenant les tailles prédéfinies que peut prendre le labyrinthe
+    int labyrintheSizeOptions[3] = {5,10,15};
    signals:
+    // Signal emis lorsque le jeu a été gagné.
+    // Renvoi le QString correspondant au temps mis par le joueur pour finir
     void gameFinished(QString);
    private slots:
+    // Lorsque la webcam indique qu'il y a eu un mouvement, on modifie les champs responsables de la direction
     void updateDirection(Webcam::Move);
+    // Lorsque l'on clique sur recommencer, cette méthode est appelée.
+    // Réinitialise le jeu
     void restartGame();
+    // Lorsque le joueur modifie la taille du labyrinthe, on modifie les paramètres de tailles du labyrinthe et on recommence une partie
     void updateSize(int);
 };
 

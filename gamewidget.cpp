@@ -311,20 +311,6 @@ void GameWidget::checkUserWin() {
     }
 }
 
-void GameWidget::keyPressEvent(QKeyEvent *event) {
-    if (event->key() == Qt::Key_Up) moveForward = true;
-    if (event->key() == Qt::Key_Down) moveBackward = true;
-    if (event->key() == Qt::Key_Left) moveLeft = true;
-    if (event->key() == Qt::Key_Right) moveRight = true;
-}
-
-void GameWidget::keyReleaseEvent(QKeyEvent *event) {
-    if (event->key() == Qt::Key_Up) moveForward = false;
-    if (event->key() == Qt::Key_Down) moveBackward = false;
-    if (event->key() == Qt::Key_Left) moveLeft = false;
-    if (event->key() == Qt::Key_Right) moveRight = false;
-}
-
 // Slots
 void GameWidget::updateDirection(Webcam::Move d) {
     moveRight = false;

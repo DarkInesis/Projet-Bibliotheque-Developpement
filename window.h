@@ -8,7 +8,10 @@
 namespace Ui {
 class Window;
 }
-
+/*
+ * Classe principale d'affichage
+ * Fais le lien entre ses composants graphiques (boutons/gamewidget) et la webcam
+*/
 class Window : public QWidget {
     Q_OBJECT
 
@@ -18,19 +21,18 @@ class Window : public QWidget {
 
    private:
     Ui::Window* ui;
-    GameWidget* gameWidget;
-    class UserControl* userControler;
     Webcam* myWebCam;
-    bool isWebcamNeedsInitialization;
 
-    // ThreadWebcam threadWebcam;
-  signals:
-    void restart();
    private slots:
+    // slot appele lorsqu'une image a ete capturee : affiche l'image de la webcam
     void update(cv::Mat*);
+    // slot appele lors du click du bouton "initialiser webcam" : demande l'initialisation de la webcam
     void on_buttonInitWebCam_clicked();
+    //
     void updateStateInitialisationButton(bool);
+    // Slot appele lorsqu'on appui sur le bouton "recommencer" : cache le menu
     void on_restart_button_2_clicked();
+    // Slot appele a la fin de la partie. Montre le menu (le QString correspond à la duree du jeu)
     void enableMenu(QString);
 };
 

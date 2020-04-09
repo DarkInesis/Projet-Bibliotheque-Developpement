@@ -91,8 +91,6 @@ void Webcam::detectFace() {
     cv::flip(frame, frame, 1);
     // Convert to gray
     cv::cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
-    // Equalize graylevels
-    //        equalizeHist( frame_gray, frame_gray );
     //-- Detect faces
     face_cascade.detectMultiScale(frame_gray, faces, 1.1, 4, 0, Size(60, 60));
 
@@ -122,17 +120,6 @@ void Webcam::getDirection() {
     else
         new_direction = NEUTRE;
 
-    //    if (new_direction == DROITE)
-    //        cout << "Direction : DROTIE" << endl;
-    //    else if (new_direction == GAUCHE)
-    //        cout << "Direction : GAUCHE" << endl;
-    //    else if (new_direction == ARRIERE)
-    //        cout << "Direction : ARRIERE" << endl;
-    //    else if (new_direction == AVANT)
-    //        cout << "Direction : AVANT" << endl;
-    //    else
-    //        cout << "Direction : NEUTRE" << endl;
-
     if (new_direction != direction) {
         counterChangeDirection++;
         if (counterChangeDirection > 5 || new_direction == NEUTRE) {
@@ -152,9 +139,6 @@ void Webcam::resetInitFace() {
 }
 
 void Webcam::run() {
-    // Init output window
-    // namedWindow("WebCam", 1);
-
     while (waitKey(5) < 0) {
         cap >> current_frame;
 
@@ -174,6 +158,5 @@ void Webcam::run() {
             emit webcamFrameCaptured(display_frame);
         }
 
-        // imshow("WebCam", display_frame);
     }
 }
