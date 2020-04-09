@@ -120,6 +120,11 @@ void GameWidget::paintGL() {
         glMatrixMode(GL_PROJECTION);
         glPushMatrix();
         glLoadIdentity();
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glLoadIdentity();
+        glDisable(GL_LIGHTING);
+        glDisable(GL_DEPTH_TEST);
 
         //** Ajout de la carte du labyrinthe **//
         // On fait -1 pour avoir une marge de 1 entre le plan et le bord du widget
@@ -163,6 +168,7 @@ void GameWidget::userMove() {
     }
 
     if (moveForward || moveBackward) {
+        // Mouvement de tête de haut en bas pour un effet plus réaliste
         if (head_move) {
             z_position += 0.015;
             if (z_position >= 7.2) head_move = false;
@@ -170,6 +176,7 @@ void GameWidget::userMove() {
             z_position -= 0.02;
             if (z_position <= 6.8) head_move = true;
         }
+        // Déclenchement du chronomètre lorqu'on commence à avancer
         if (!game_started) {
             chrono.start();
             game_started = true;
@@ -199,7 +206,7 @@ void GameWidget::detectCollision(float new_x_position, float new_y_position) {
     bool x_ok = true, y_ok = true;
 
     // On regarde si on avance dans une zone de collision (de 1 à 8)
-    // puis on vérifie s'il y a un mur ou non
+    // puis on vérifie s'il y a un mur ou non (avec une marge de 0.1 ou 0.11 * SZ)
     //
     //      +---+---+---+---+
     //      | 1 |   2   | 3 |
@@ -290,8 +297,10 @@ void GameWidget::detectCollision(float new_x_position, float new_y_position) {
 
 void GameWidget::checkBallFound() {
     float ball_x, ball_y;
+    // On récupère les coordonnées de la sphère
     tie(ball_x, ball_y) = ball->getBallPosition();
 
+    // On regarde si le joueur est sur la balle avec une marge de 2
     if (x_position < ball_x + 2 && x_position > ball_x - 2)
         if (y_position < ball_y + 2 && y_position > ball_y - 2) {
             ball_found = true;
@@ -300,6 +309,7 @@ void GameWidget::checkBallFound() {
 }
 
 void GameWidget::checkUserWin() {
+    // On regarde si le joueur est à l'extérieur du labyrinthe
     if (x_position < SZ / 4 || x_position > coeff_move * labyrinthe->maze.width_ ||
         y_position > -SZ / 4 || y_position < -coeff_move * labyrinthe->maze.height_) {
         canMove = false;
@@ -346,7 +356,7 @@ void GameWidget::updateSize(int index) {
     if (index != 0) {
         maze_width_ = labyrintheSizeOptions[index - 1];
         maze_height_ = labyrintheSizeOptions[index - 1];
-        // si la partie n'est pas terminée, on relance le jeu avec la nouvelle taille
+        // Si la partie n'est pas terminée, on relance le jeu avec la nouvelle taille
         if (canMove) {
             game_started = false;
             restartGame();

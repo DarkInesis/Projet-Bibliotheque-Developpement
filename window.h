@@ -26,9 +26,9 @@ class Window : public QWidget {
    private slots:
     // slot appele lorsqu'une image a ete capturee : affiche l'image de la webcam
     void update(cv::Mat*);
-    // slot appele lors du click du bouton "initialiser webcam" : demande l'initialisation de la webcam
+    // slot appele lors du click du bouton "initialiser webcam" : demande l'initialisation de la
+    // webcam
     void on_buttonInitWebCam_clicked();
-    //
     void updateStateInitialisationButton(bool);
     // Slot appele lorsqu'on appui sur le bouton "recommencer" : cache le menu
     void on_restart_button_2_clicked();

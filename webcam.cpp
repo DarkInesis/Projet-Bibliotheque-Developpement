@@ -70,10 +70,7 @@ void Webcam::detectMotion() {
     // Compute the translation vector between the origin and the matching rect
     vect = Point(maxLoc.x - templateRect.x, maxLoc.y - templateRect.y);
 
-    // Draw green rectangle and the translation vector
     p = Point(face_center.x + vect.x, face_center.y + vect.y);
-
-    // std::cout << "vect.x = " << vect.x << "  vect.y = " << vect.y << endl;
 }
 
 void Webcam::detectFace() {
@@ -105,17 +102,23 @@ void Webcam::detectFace() {
 
 void Webcam::getDirection() {
     Move new_direction;
-    if (vect.x > 50 || vect.x < -50 || vect.y > 50 || vect.y < -50) {
+    // Si on a un vecteur trop grand (absurde), on réinitialise la position neutre
+    float absurd = face.width * 0.35;
+    float trigger = face.width * 0.08;
+    if (vect.x > absurd || vect.x < -absurd || vect.y > absurd || vect.y < -absurd) {
         counterAbsurde++;
         if (counterAbsurde > 15) resetInitFace();
         new_direction = NEUTRE;
-    } else if (vect.x > 15 && vect.y < 15 && vect.y > -15)
+    } else
+        counterAbsurde = 0;
+
+    if (vect.x > trigger && vect.y < trigger && vect.y > -trigger)
         new_direction = DROITE;
-    else if (vect.x < -15 && vect.y < 15 && vect.y > -15)
+    else if (vect.x < -trigger && vect.y < trigger && vect.y > -trigger)
         new_direction = GAUCHE;
-    else if (vect.y > 15 && vect.x < 15 && vect.x > -15)
+    else if (vect.y > trigger && vect.x < trigger && vect.x > -trigger)
         new_direction = ARRIERE;
-    else if (vect.y < -15 && vect.x < 15 && vect.x > -15)
+    else if (vect.y < -trigger && vect.x < trigger && vect.x > -trigger)
         new_direction = AVANT;
     else
         new_direction = NEUTRE;
@@ -157,6 +160,5 @@ void Webcam::run() {
             arrowedLine(*display_frame, face_center, p, Scalar(255, 255, 255), 2);
             emit webcamFrameCaptured(display_frame);
         }
-
     }
 }

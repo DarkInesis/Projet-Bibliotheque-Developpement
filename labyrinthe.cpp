@@ -16,10 +16,6 @@ Labyrinthe::Labyrinthe(int width, int height) {
 
     quadric = gluNewQuadric();
 
-    //      // Ball position
-    //      ball_x = (maze.width_ * coeff_move + SZ / 4) / 2;
-    //      ball_y = -(maze.height_ * coeff_move + SZ / 4) / 2;
-
     // Random exit
     // Côté aléatoire du labyrinthe pour la porte de sortie
     // N = 0, E = 1, S = 2, W = 3
@@ -29,26 +25,18 @@ Labyrinthe::Labyrinthe(int width, int height) {
         i_exit = 0;
         j_exit = rand() % maze.width_;
         d_exit = Cell::N;
-        x_exit_light = i_exit * coeff_move + SZ / 2;
-        y_exit_light = SZ / 4;
     } else if (cote == 1) {
         i_exit = rand() % maze.height_;
         j_exit = maze.width_ - 1;
         d_exit = Cell::E;
-        x_exit_light = maze.width_ * coeff_move + SZ / 2;
-        y_exit_light = -j_exit * coeff_move - SZ / 2;
     } else if (cote == 2) {
         i_exit = maze.height_ - 1;
         j_exit = rand() % maze.width_;
         d_exit = Cell::S;
-        x_exit_light = i_exit * coeff_move + SZ / 2;
-        y_exit_light = -maze.height_ * coeff_move - SZ / 2;
     } else {
         i_exit = rand() % maze.height_;
         j_exit = 0;
         d_exit = Cell::W;
-        x_exit_light = -SZ / 4;
-        y_exit_light = -j_exit * coeff_move - SZ / 2;
     }
 }
 
@@ -186,47 +174,10 @@ void Labyrinthe::ShowBall() const {
     glPopMatrix();
 }
 
-void Labyrinthe::ShowExitLighting() const {
-    glPushMatrix();
-
-    // On se déplace au centre du labyrinthe où se trouve la sphère
-    glTranslatef(x_exit_light, y_exit_light, 5);
-
-    // Réglage de la lumière
-    GLfloat light_position[] = {0.0, 0.0, 0.0, 1.0};
-    GLfloat ball_amb[] = {1.0, 1.0, 1.0, 0.0};
-    GLfloat ball_dif[] = {1.0, 1.0, 1.0, 1.0};
-    GLfloat ball_spec[] = {1.0, 1.0, 1.0, 1.0};
-
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, ball_amb);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, ball_dif);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, ball_spec);
-    glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0.0);
-    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.0);
-    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.04);
-
-    //  // Réglage de la sphère
-    //  GLfloat ball_emission[] = {1.0, 1.0, 1.0, 1.0};
-
-    //  glMaterialfv(GL_FRONT, GL_EMISSION, ball_emission);
-
-    //  // Dessin de la sphère
-    //  gluSphere(this->quadric, 1.5, 20, 20);
-
-    glPopMatrix();
-}
-
 void Labyrinthe::Show2DMap(float x_position, float y_position, float angle) const {
     // Useful variables
     int width = maze.width_;
     int height = maze.height_;
-
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-    glLoadIdentity();
-    glDisable(GL_LIGHTING);
-    glDisable(GL_DEPTH_TEST);
 
     // Dessin du fond blanc
     glColor3f(1.0, 1.0, 1.0);
@@ -237,24 +188,28 @@ void Labyrinthe::Show2DMap(float x_position, float y_position, float angle) cons
     glVertex2f(width + 0.4, -0.4);
     glEnd();
 
-    // Dessin des mursde chaque case
+    //** Dessin des murs de chaque case **//
     glColor3f(0.0, 0.0, 0.0);
     glLineWidth(2.0);
     glBegin(GL_LINES);
+    // On parcourt toutes les cases du labyrinthe
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
+            // Si on est sur une case de la première ligne, on regarde la frontière Nord
             if (i == 0) {
                 if (maze.grid_[i][j].isFrontier(Cell::N)) {
                     glVertex2f(j, i);
                     glVertex2f(j + 1, i);
                 }
             }
+            // Si on est sur la première colonne, on regarde la frontière Ouest
             if (j == 0) {
                 if (maze.grid_[i][j].isFrontier(Cell::W)) {
                     glVertex2f(j, i);
                     glVertex2f(j, i + 1);
                 }
             }
+            // Pour toutes les cases, on regarde les frontières Est et Sud
             if (maze.grid_[i][j].isFrontier(Cell::E)) {
                 glVertex2f(j + 1, i);
                 glVertex2f(j + 1, i + 1);
@@ -268,11 +223,13 @@ void Labyrinthe::Show2DMap(float x_position, float y_position, float angle) cons
 
     glEnd();
 
+    //** Dessin du symbole de la position du joueur **//
     glPushMatrix();
-    // Dessin du symbole de la position du joueur
+    // On se place sur la position et la rotation du joueur
     glTranslatef(x_position * width, y_position * height, 0);
     glRotatef(90 - angle, 0, 0, 1);
 
+    // On dessine le symbole de la position
     glColor3ub(100, 120, 170);
     glBegin(GL_TRIANGLES);
     glVertex2f(0.0, 0.2);
@@ -287,6 +244,4 @@ void Labyrinthe::Show2DMap(float x_position, float y_position, float angle) cons
     glVertex2f(0.35, 0.35);
     glEnd();
     glPopMatrix();
-
-    // Dessin de la sphère lumineuse
 }

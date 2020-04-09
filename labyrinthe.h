@@ -32,7 +32,6 @@ class Labyrinthe {
 
     float ball_x, ball_y;
     int i_exit, j_exit;
-    float x_exit_light, y_exit_light;
     Cell::Direction d_exit;
 
     // Destructeur
@@ -41,7 +40,6 @@ class Labyrinthe {
     // Methode d'affichage
     void Display() const;
     void ShowBall() const;
-    void ShowExitLighting() const;
     void Show2DMap(float, float, float) const;
     void OpenExit() { maze.grid_[i_exit][j_exit].setFrontier(d_exit, false); };
 

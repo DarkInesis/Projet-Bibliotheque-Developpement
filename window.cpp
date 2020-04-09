@@ -7,12 +7,13 @@ using namespace cv;
 
 Window::Window(QWidget *parent) : QWidget(parent), ui(new Ui::Window) {
     ui->setupUi(this);
-    //Init la boite de choix de la taille du labyrinthe
+    // Init la boite de choix de la taille du labyrinthe
     ui->tailleLabBox->addItem("Taille Labyrinthe");
     ui->tailleLabBox->addItem("5x5");
     ui->tailleLabBox->addItem("10x10");
     ui->tailleLabBox->addItem("15x15");
-    connect(ui->tailleLabBox, SIGNAL(currentIndexChanged(int)), ui->frameJeu, SLOT(updateSize(int)));
+    connect(ui->tailleLabBox, SIGNAL(currentIndexChanged(int)), ui->frameJeu,
+            SLOT(updateSize(int)));
 
     this->myWebCam = new Webcam();
 

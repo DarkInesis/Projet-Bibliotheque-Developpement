@@ -70,7 +70,5 @@ void Ball::Display() {
       // Dessin de la sphère
       gluSphere(this->quadric, 1.5, 20, 20);
 
-      // glDisable(GL_TEXTURE_2D);
-
       glPopMatrix();
 }
