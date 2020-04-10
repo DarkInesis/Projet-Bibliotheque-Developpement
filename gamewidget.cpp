@@ -1,3 +1,5 @@
+/** Author : F. Zdrada & L. Dedier **/
+
 #define _USE_MATH_DEFINES
 
 #include "gamewidget.h"
@@ -354,8 +356,8 @@ void GameWidget::restartGame() {
 void GameWidget::updateSize(int index) {
     // Cas ou le joueur selectionne une taille de labyrinthe
     if (index != 0) {
-        maze_width_ = labyrintheSizeOptions[index - 1];
-        maze_height_ = labyrintheSizeOptions[index - 1];
+        maze_width_ = labyrintheSizeOptionsWidth[index - 1];
+        maze_height_ = labyrintheSizeOptionsHeight[index - 1];
         // Si la partie n'est pas terminée, on relance le jeu avec la nouvelle taille
         if (canMove) {
             game_started = false;

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/res">
+        <file>resources/haarcascade_frontalface_alt.xml</file>
+        <file>resources/logo_tse.png</file>
+    </qresource>
+</RCC>

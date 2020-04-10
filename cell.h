@@ -12,19 +12,19 @@
 using namespace std;
 
 class Cell {
-     public:
-      enum Type { EMPTY, MARKED, FRONTIER };
-      enum Direction { N = 1, S = 3, E = 0, W = 2 };
+   public:
+    enum Type { EMPTY, MARKED, FRONTIER };
+    enum Direction { N = 1, S = 3, E = 0, W = 2 };
 
-     private:
-      int value_ = EMPTY;
-      bool frontier[4] = {true, true, true, true};
+   private:
+    int value_ = EMPTY;
+    bool frontier[4] = {true, true, true, true};
 
-     public:
-      int getValue() const { return value_; }
-      bool isFrontier(Direction d) const { return frontier[d]; }
-      void setValue(int type) { value_ = type; }
-      void setFrontier(Direction d, bool state) { frontier[d] = state; }
+   public:
+    int getValue() const { return value_; }
+    bool isFrontier(Direction d) const { return frontier[d]; }
+    void setValue(int type) { value_ = type; }
+    void setFrontier(Direction d, bool state) { frontier[d] = state; }
 };
 
 #endif  // CELL_H

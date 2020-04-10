@@ -7,7 +7,6 @@
 QT       += core gui opengl widgets
 
 TARGET = Projet_bibliotheque
-CONFIG   += console
 CONFIG   -= app_bundle
 
 TEMPLATE = app
@@ -71,3 +70,6 @@ DISTFILES += \
     resources/haarcascade_frontalcatface_extended.xml \
     resources/haarcascade_frontalface_alt.xml \
     resources/logo_tse.png
+
+RESOURCES += \
+    res.qrc

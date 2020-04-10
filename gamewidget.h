@@ -1,3 +1,5 @@
+/** Author : F. Zdrada & L. Dedier **/
+
 #ifndef GAMEWIDGET_H
 #define GAMEWIDGET_H
 
@@ -45,14 +47,17 @@ class GameWidget : public QGLWidget {
 
     // Fonction d'affichage
     void paintGL();
-    // Methode qui manage le mouvement du joueur (calcul de la nouvelle position/test si collision/test si la balle est attrapée/...)
+    // Methode qui manage le mouvement du joueur (calcul de la nouvelle position/test si
+    // collision/test si la balle est attrapée/...)
     void userMove();
-    // On teste si le mouvement est possible ( les deux arguments correspondent aux futures coordonnées du joueur)
+    // On teste si le mouvement est possible ( les deux arguments correspondent aux futures
+    // coordonnées du joueur)
     // Si il n'y a pas de collision, on applique le mouvement.
     void detectCollision(float, float);
     // TODO
     void checkBallFound();
-    // Verifie si le joueur a gagné la partie à la suite de son mouvement. Emet le signal GameFinished si c'est le cas.
+    // Verifie si le joueur a gagné la partie à la suite de son mouvement. Emet le signal
+    // GameFinished si c'est le cas.
     void checkUserWin();
 
    private:
@@ -67,18 +72,21 @@ class GameWidget : public QGLWidget {
     // Pointeur vers la Ball (objectif à récuperer)
     Ball *ball;
     // Tableau contenant les tailles prédéfinies que peut prendre le labyrinthe
-    int labyrintheSizeOptions[3] = {5,10,15};
+    int labyrintheSizeOptionsWidth[5] = {5, 10, 10, 15, 15};
+    int labyrintheSizeOptionsHeight[5] = {5, 6, 10, 10, 15};
    signals:
     // Signal emis lorsque le jeu a été gagné.
     // Renvoi le QString correspondant au temps mis par le joueur pour finir
     void gameFinished(QString);
    private slots:
-    // Lorsque la webcam indique qu'il y a eu un mouvement, on modifie les champs responsables de la direction
+    // Lorsque la webcam indique qu'il y a eu un mouvement, on modifie les champs responsables de la
+    // direction
     void updateDirection(Webcam::Move);
     // Lorsque l'on clique sur recommencer, cette méthode est appelée.
     // Réinitialise le jeu
     void restartGame();
-    // Lorsque le joueur modifie la taille du labyrinthe, on modifie les paramètres de tailles du labyrinthe et on recommence une partie
+    // Lorsque le joueur modifie la taille du labyrinthe, on modifie les paramètres de tailles du
+    // labyrinthe et on recommence une partie
     void updateSize(int);
 };
 

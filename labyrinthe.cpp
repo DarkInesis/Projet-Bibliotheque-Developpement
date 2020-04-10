@@ -1,3 +1,5 @@
+/** Author : F. Zdrada **/
+
 #include "labyrinthe.h"
 #include "draw_functions.h"
 #include <iostream>

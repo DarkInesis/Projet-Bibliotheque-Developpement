@@ -1,3 +1,5 @@
+/** Author : F. Zdrada **/
+
 #ifndef LABYRINTHE_H
 #define LABYRINTHE_H
 

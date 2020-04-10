@@ -1,3 +1,5 @@
+/** Author : L. Dedier **/
+
 #include "webcam.h"
 
 using namespace std;
@@ -20,8 +22,7 @@ Webcam::Webcam() {
         return;
     }
 
-    if (!face_cascade.load(
-            "../Projet-Bibliotheque-Developpement/resources/haarcascade_frontalface_alt.xml")) {
+    if (!face_cascade.load("../Projet-Bibliotheque-Developpement/resources/haarcascade_frontalface_alt.xml")) {
         cerr << "Error loading haarcascade" << endl;
     }
 }

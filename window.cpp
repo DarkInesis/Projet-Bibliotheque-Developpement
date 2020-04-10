@@ -1,3 +1,5 @@
+/** Author : L. Dedier **/
+
 #include "window.h"
 #include "ui_window.h"
 #include <QTimer>
@@ -10,7 +12,9 @@ Window::Window(QWidget *parent) : QWidget(parent), ui(new Ui::Window) {
     // Init la boite de choix de la taille du labyrinthe
     ui->tailleLabBox->addItem("Taille Labyrinthe");
     ui->tailleLabBox->addItem("5x5");
+    ui->tailleLabBox->addItem("10x6");
     ui->tailleLabBox->addItem("10x10");
+    ui->tailleLabBox->addItem("15x10");
     ui->tailleLabBox->addItem("15x15");
     connect(ui->tailleLabBox, SIGNAL(currentIndexChanged(int)), ui->frameJeu,
             SLOT(updateSize(int)));

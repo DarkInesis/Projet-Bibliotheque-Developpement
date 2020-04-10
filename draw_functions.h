@@ -1,3 +1,5 @@
+/** Author : F. Zdrada **/
+
 #ifndef DRAW_FUNCTIONS_H
 #define DRAW_FUNCTIONS_H
 
@@ -196,6 +198,5 @@ void DrawSouthWall(int SZ) {
 
     DrawWall(x_a, y_a, x_b, y_b, x_c, y_c, x_d, y_d, hauteur);
 }
-
 
 #endif  // DRAW_FUNCTIONS_H

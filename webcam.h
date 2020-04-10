@@ -1,3 +1,5 @@
+/** Author : L. Dedier **/
+
 #ifndef WEBCAM_H
 #define WEBCAM_H
 
@@ -7,6 +9,7 @@
 #include <opencv2/objdetect.hpp>
 #include <QObject>
 #include <QThread>
+#include <QResource>
 #include <cstdio>
 #include <iostream>
 /*
@@ -16,6 +19,7 @@
 */
 class Webcam : public QThread {
     Q_OBJECT
+
    public:
     // Constructeur
     Webcam();

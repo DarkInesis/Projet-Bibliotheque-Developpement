@@ -17,22 +17,22 @@ using namespace std;
 using Point = pair<int, int>;
 
 class Maze {
-     public:
-      vector<vector<Cell>> grid_;
+   public:
+    vector<vector<Cell>> grid_;
 
-      int width_;
-      int height_;
+    int width_;
+    int height_;
 
-      void addFrontier(Point p, list<Point> &frontier);
-      void mark(Point p, list<Point> &frontier);
-      list<Point> neighbors(Point p);
-      Cell::Direction direction(Point f, Point t);
+    void addFrontier(Point p, list<Point> &frontier);
+    void mark(Point p, list<Point> &frontier);
+    list<Point> neighbors(Point p);
+    Cell::Direction direction(Point f, Point t);
 
-      Maze();
-      Maze(int width, int height);
-      void reinit();
-      void display(bool pause = false);
-      void generate(bool show = false);
+    Maze();
+    Maze(int width, int height);
+    void reinit();
+    void display(bool pause = false);
+    void generate(bool show = false);
 };
 
 #endif  // MAZE_H

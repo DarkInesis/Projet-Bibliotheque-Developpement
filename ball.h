@@ -1,3 +1,5 @@
+/** Author : F. Zdrada **/
+
 #ifndef BALL_H
 #define BALL_H
 
@@ -8,23 +10,23 @@
 
 // Classe pour afficher la sphère lumineuse
 class Ball {
-     private:
-      GLUquadric *quadric;
-      GLuint texture;
+   private:
+    GLUquadric *quadric;
+    GLuint texture;
 
-     public:
-      float ball_x_, ball_y_, rotation;
+   public:
+    float ball_x_, ball_y_, rotation;
 
-      Ball();
-      Ball(int ball_x, int ball_y);
-      // Destructeur
-      virtual ~Ball();
+    Ball();
+    Ball(int ball_x, int ball_y);
+    // Destructeur
+    virtual ~Ball();
 
-      // Methode d'affichage
-      void Display();
+    // Methode d'affichage
+    void Display();
 
-      // Getters
-      std::tuple<float, float> getBallPosition() { return std::make_tuple(ball_x_, ball_y_); }
+    // Getters
+    std::tuple<float, float> getBallPosition() { return std::make_tuple(ball_x_, ball_y_); }
 };
 
 #endif  // BALL_H

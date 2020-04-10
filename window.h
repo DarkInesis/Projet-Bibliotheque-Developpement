@@ -1,3 +1,5 @@
+/** Author : L. Dedier **/
+
 #ifndef WINDOW_H
 #define WINDOW_H
 
